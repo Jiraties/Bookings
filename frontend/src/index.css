@@ -1,0 +1,67 @@
+:root {
+  font-family: "IBM Plex Sans Thai", sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light;
+  color: #000;
+  background-color: #fff;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.root {
+  /* padding: 2.5rem; */
+  /* height: auto; */
+}
+
+input {
+  font-family: "IBM Plex Sans Thai", sans-serif;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 0;
+  box-shadow: rgba(149, 157, 165, 0.25) 0px 8px 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.boxButton {
+  font-family: "IBM Plex Sans Thai", sans-serif;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 0;
+  box-shadow: rgba(149, 157, 165, 0.25) 0px 8px 24px;
+  width: 100%;
+  color: #fff;
+  background-color: #51d1dc;
+  box-sizing: border-box;
+}
+
+.boxButton:hover {
+  transition-duration: 0.2s;
+  transform: scale(1.05);
+}
+
+.boxButton:active {
+  transition-duration: 0.2s;
+  transform: scale(0.97);
+}
+
+.margBottom1 {
+  margin-bottom: 1rem;
+}
