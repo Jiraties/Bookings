@@ -44,3 +44,49 @@
   border-radius: 2rem;
   box-shadow: rgba(149, 157, 165, 0.4) 0px 8px 24px;
 }
+
+.loadingButton {
+  background-color: #b7b7b7;
+}
+
+.login__error {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-sizing: border-box;
+  box-shadow: rgba(149, 157, 165, 0.25) 0px 8px 24px;
+  width: 100%;
+  background-color: #fd4169;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.login__error i {
+  font-size: 1.5rem;
+}
+
+.shake {
+  animation: shake 0.35s ease-in-out;
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-5px);
+  }
+  40% {
+    transform: translateX(5px);
+  }
+  60% {
+    transform: translateX(-4px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

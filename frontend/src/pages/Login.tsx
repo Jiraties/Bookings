@@ -1,16 +1,51 @@
 import Logo from "../components/Logo";
 
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { useAuth } from "../context/AuthContext";
+import { useState } from "react";
+import axios from "axios";
 
 import "./Login.css";
-import { useState } from "react";
 
 const Login = () => {
+  const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState({ code: 0, message: "" });
+  const [shake, setShake] = useState(false);
 
-  const submitLogin = () => {
-    console.log(email, password);
+  const triggerShake = () => {
+    setShake(true);
+    setTimeout(() => setShake(false), 350);
+  };
+
+  const submitLoginHandler = async (
+    event: React.SubmitEvent<HTMLFormElement>,
+  ) => {
+    event.preventDefault();
+
+    if (isLoading) return;
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/auth/login",
+        {
+          email: email.toLowerCase(),
+          password,
+        },
+        { withCredentials: true },
+      );
+
+      login(response.data.user);
+      console.log(response.data.user);
+
+      setIsLoading(false);
+    } catch (err: any) {
+      setError({ code: err.response.status, message: err.response.data.error });
+      setIsLoading(false);
+      triggerShake();
+    }
   };
 
   return (
@@ -19,8 +54,14 @@ const Login = () => {
         <Logo isAbsolute />
 
         <div className="center">
-          <div className="login__form">
+          <form className="login__form" onSubmit={submitLoginHandler}>
             <h1>เข้าสู่ระบบ</h1>
+            {error.code !== 0 && (
+              <div className={shake ? "login__error shake" : "login__error"}>
+                <i className="bx bx-error"></i>
+                <p>{error.message}</p>
+              </div>
+            )}
             <div className="login__formItem">
               <p className="login__formItemHeader">อีเมล</p>
               <input
@@ -39,10 +80,13 @@ const Login = () => {
                 placeholder="พิมพ์รหัสผ่าน"
               />
             </div>
-            <button className="boxButton" onClick={submitLogin}>
+            <button
+              className={isLoading ? "boxButton loadingButton" : "boxButton"}
+              type="submit"
+            >
               <p>เข้าสู่ระบบ</p>
             </button>
-          </div>
+          </form>
         </div>
       </div>
       <div className="login__right">

@@ -1,0 +1,71 @@
+main {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.home__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.home__headerProfile img {
+  height: 3.5rem;
+  width: 3.5rem;
+  object-fit: cover;
+  border-radius: 10rem;
+}
+
+.home__headerProfile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.home__stats {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.home__statsItem h3 {
+  font-size: 2.5rem;
+  font-weight: 500;
+}
+
+.home__statsAndActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.home__actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.home__action {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: #fff;
+  box-shadow: rgba(149, 157, 165, 0.25) 0px 8px 24px;
+  border-radius: 2rem;
+}
+
+.home__action i {
+  color: #51d1dc;
+  font-size: 1.5rem;
+}
+
+.home__action:hover {
+  transition-duration: 0.2s;
+  transform: scale(1.05);
+}
+
+.home__action:active {
+  transition-duration: 0.2s;
+  transform: scale(0.97);
+}

@@ -3,9 +3,15 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import "boxicons/css/boxicons.min.css";
 import App from "./App.tsx";
+import { AuthProvider } from "./context/AuthContext.tsx";
+import { BrowserRouter } from "react-router";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <AuthProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </AuthProvider>
   </StrictMode>,
 );
