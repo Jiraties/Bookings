@@ -8,7 +8,7 @@ import "./Login.css";
 
 const Login = () => {
   const { login } = useAuth();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState({ code: 0, message: "" });
@@ -31,7 +31,7 @@ const Login = () => {
       const response = await axios.post(
         "http://localhost:3000/auth/login",
         {
-          email: email.toLowerCase(),
+          username: username,
           password,
         },
         { withCredentials: true },
@@ -63,12 +63,12 @@ const Login = () => {
               </div>
             )}
             <div className="login__formItem">
-              <p className="login__formItemHeader">อีเมล</p>
+              <p className="login__formItemHeader">ชื่อผู้ใช้ </p>
               <input
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                type="email"
-                placeholder="พิมพ์อีเมล"
+                value={username}
+                onChange={(event) => setUsername(event.target.value)}
+                type="text"
+                placeholder="พิมพ์ชื่อผู้ใช้"
               />
             </div>
             <div className="login__formItem margBottom1">

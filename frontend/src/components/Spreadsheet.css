@@ -1,0 +1,31 @@
+.green {
+  background-color: rgb(178, 249, 226);
+}
+
+.red {
+  background-color: rgb(255, 230, 230);
+  color: red;
+}
+
+.platformCell {
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+
+.platformCell__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+}
+
+.platformCell__wrapper {
+  align-items: center;
+
+  display: flex;
+  gap: 0.7rem;
+  height: 1rem;
+  width: fit-content;
+  padding: 0.6rem;
+  border-radius: 2rem;
+}

@@ -1,0 +1,66 @@
+.addBooking__wrapper {
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 1rem;
+  width: 50%;
+  /* height: 50%; */
+  min-width: 40rem;
+}
+
+h1 {
+  font-weight: 500;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+.addBooking__label {
+  margin-bottom: 0.5rem;
+}
+
+.addBooking__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.addBooking__dateInputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  font-family: "IBM Plex Sans Thai", sans-serif;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: rgba(149, 157, 165, 0.25) 0px 8px 24px;
+}
+
+.addBooking__dateInput {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.addBooking__labels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.addBooking__submit {
+  width: fit-content;
+  margin-left: auto;
+  margin-top: 2rem;
+}
+
+.platformCell__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+}
+
+.platformCell__wrapper {
+  align-items: center;
+
+  display: flex;
+  gap: 0.7rem;
+  height: 1rem;
+  width: fit-content;
+  padding: 0.6rem;
+  border-radius: 2rem;
+}

@@ -45,21 +45,6 @@ main {
   gap: 1rem;
 }
 
-.home__action {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  background-color: #fff;
-  box-shadow: rgba(149, 157, 165, 0.25) 0px 8px 24px;
-  border-radius: 2rem;
-}
-
-.home__action i {
-  color: #51d1dc;
-  font-size: 1.5rem;
-}
-
 .home__action:hover {
   transition-duration: 0.2s;
   transform: scale(1.05);
@@ -68,4 +53,10 @@ main {
 .home__action:active {
   transition-duration: 0.2s;
   transform: scale(0.97);
+}
+
+.home__modalCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

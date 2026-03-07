@@ -151,7 +151,7 @@ export default function StatCard({ label, value }: StatCardProps) {
 
       <div
         style={{
-          fontSize: "3rem",
+          fontSize: "2.5rem",
           fontWeight: 400,
           color: flashColor,
           display: "flex",

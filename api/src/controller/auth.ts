@@ -12,7 +12,9 @@ export const createUser = async (
   next: NextFunction,
 ) => {
   try {
-    const { email, password, secretCode, admin, name } = req.body;
+    const { username, password, secretCode, admin, name } = req.body;
+
+    console.log(req.body);
 
     if (secretCode !== process.env.SECRET_CODE)
       throw new Error(
@@ -22,7 +24,7 @@ export const createUser = async (
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = new User({
-      email: email.toLowerCase(),
+      username,
       password: hashedPassword,
       admin,
       name,
@@ -42,12 +44,12 @@ export const login = async (
   next: NextFunction,
 ) => {
   try {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
-    if (!email || !password)
+    if (!username || !password)
       return res.status(400).json({ error: "กรุณากรอกอีเมลและรหัสผ่านให้ครบ" });
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ username });
     if (!user)
       return res.status(401).json({ error: "อีเมลหรือรหัสผ่านไม่ถูกต้อง" });
 
@@ -57,9 +59,13 @@ export const login = async (
     if (!process.env.JWT_SECRET)
       throw new Error("JWT_SECRET not found serverside");
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    const token = jwt.sign(
+      { userId: user._id, admin: user.admin },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1d",
+      },
+    );
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -70,7 +76,7 @@ export const login = async (
     res.status(200).json({
       message: "Logged In Successfully.",
       user: {
-        email: user.email,
+        username: user.username,
         name: user.name,
         admin: user.admin,
       },
@@ -78,4 +84,38 @@ export const login = async (
   } catch (err: any) {
     return res.status(400).json({ error: err.message });
   }
+};
+
+export const me = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    console.log(req.user);
+
+    if (!req.user) return res.status(401).json({ error: "Not Authorized" });
+
+    const user = await User.findById(req.user?.userId);
+
+    if (!user) throw new Error("Token authorized but user not found.");
+
+    res.status(200).json({
+      user: {
+        username: user.username,
+        name: user.name,
+        admin: user.admin,
+      },
+      message: "Successfully fetched user info",
+    });
+  } catch (err) {
+    res.status(400).json({ error: err });
+  }
+};
+
+export const logout = (req: Request, res: Response) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+  });
+
+  res.status(200).json({ message: "Successfully logged out" });
+  console.log("Logged Out");
 };

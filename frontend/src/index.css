@@ -30,7 +30,8 @@
   /* height: auto; */
 }
 
-input {
+input,
+select {
   font-family: "IBM Plex Sans Thai", sans-serif;
   padding: 1rem;
   border-radius: 0.5rem;
@@ -38,6 +39,7 @@ input {
   box-shadow: rgba(149, 157, 165, 0.25) 0px 8px 24px;
   width: 100%;
   box-sizing: border-box;
+  appearance: none;
 }
 
 .boxButton {

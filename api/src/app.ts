@@ -3,6 +3,9 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import authRouter from "./routes/auth";
 import cors from "cors";
+import cookieParser from "cookie-parser";
+import authMiddleware from "./middleware/authMiddleware";
+import bookingsRouter from "./routes/bookings";
 
 dotenv.config();
 
@@ -11,11 +14,14 @@ const port = process.env.PORT;
 
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/auth", authRouter);
+app.use("/bookings", authMiddleware, bookingsRouter);
 
 mongoose
   .connect(process.env.MONGO_URI || "")
-  .then(() => console.log("Connected To MongoDB"));
+  .then(() => console.log("Connected To MongoDB"))
+  .catch((err) => console.error(err));
 
 app.listen(port, () => console.log(`Server is running on port ${port}`));
