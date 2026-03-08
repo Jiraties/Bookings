@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import StatCard from "../components/StatCard";
+import StatCard from "../features/dashboard/StatCard";
 import Logo from "../components/Logo";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 
 import "./Home.css";
 import ActionButton from "../components/ActionButton";
-import Spreadsheet from "../components/Spreadsheet";
+import Spreadsheet from "../features/dashboard/Spreadsheet";
 import { Modal } from "@mui/material";
-import AddBooking from "../components/AddBooking";
+import AddBooking from "../features/bookings/AddBooking";
 
 interface booking {
   name: string;
@@ -446,7 +446,7 @@ const Home = () => {
       </div>
       <Spreadsheet bookings={bookings} />
       <button onClick={logoutHandler}>logout</button>
-      <button
+      {/* <button
         onClick={() => {
           setBookings((prev) => [
             ...prev,
@@ -469,7 +469,7 @@ const Home = () => {
         }}
       >
         Add Booking
-      </button>
+      </button> */}
     </main>
   );
 };

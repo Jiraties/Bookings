@@ -65,6 +65,7 @@ const Login = () => {
             <div className="login__formItem">
               <p className="login__formItemHeader">ชื่อผู้ใช้ </p>
               <input
+                className="boxInput"
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
                 type="text"
@@ -74,6 +75,7 @@ const Login = () => {
             <div className="login__formItem margBottom1">
               <p className="login__formItemHeader">รหัสผ่าน</p>
               <input
+                className="boxInput"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 type="password"

@@ -1,7 +1,7 @@
 import { createContext, useContext, useState } from "react";
 
 interface userType {
-  email: string;
+  username: string;
   admin: boolean;
   name: string;
 }

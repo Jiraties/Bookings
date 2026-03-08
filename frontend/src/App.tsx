@@ -1,6 +1,7 @@
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import axios from "axios";
+import { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react";
 import { Routes, Route } from "react-router";
 import { useAuth } from "./context/AuthContext";
@@ -38,6 +39,16 @@ function App() {
 
   return (
     <div className="root">
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          style: {
+            padding: "1rem",
+            backgroundColor: "#fff",
+            borderRadius: "1rem",
+          },
+        }}
+      />
       {isAuthenticated ? (
         <Routes>
           <Route path="/" element={<Home />} />

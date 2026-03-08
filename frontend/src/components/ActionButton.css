@@ -9,6 +9,15 @@
 }
 
 .home__action i {
-  color: #51d1dc;
   font-size: 1.5rem;
+  color: #51d1dc;
+}
+
+.home__actionHighlight {
+  background-color: #51d1dc;
+  color: #fff;
+}
+
+.home__actionHighlight i {
+  color: #fff;
 }

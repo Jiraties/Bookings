@@ -30,8 +30,7 @@
   /* height: auto; */
 }
 
-input,
-select {
+.boxInput {
   font-family: "IBM Plex Sans Thai", sans-serif;
   padding: 1rem;
   border-radius: 0.5rem;
