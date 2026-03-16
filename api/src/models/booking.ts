@@ -16,6 +16,8 @@ export interface booking extends Document {
   depositRepaid: boolean | null;
   staffUsername: string;
   bookingId: string;
+  isCheckedIn: boolean;
+  checkInByStaffUsername: string | null;
 }
 
 const bookingSchema = new mongoose.Schema({
@@ -32,6 +34,8 @@ const bookingSchema = new mongoose.Schema({
   depositRepaid: { type: Boolean, default: null },
   staffUsername: { type: String },
   bookingId: { type: String, unique: true },
+  isCheckedIn: { type: Boolean, default: false },
+  checkInByStaffUsername: { type: String, default: null },
 });
 
 export default mongoose.model<booking>("Booking", bookingSchema);

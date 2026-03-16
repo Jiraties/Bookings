@@ -7,6 +7,7 @@ import { Routes, Route } from "react-router";
 import { useAuth } from "./context/AuthContext";
 
 import "./App.css";
+import Sidebar from "./components/Sidebar";
 
 function App() {
   const { isAuthenticated, login } = useAuth();
@@ -50,9 +51,13 @@ function App() {
         }}
       />
       {isAuthenticated ? (
-        <Routes>
-          <Route path="/" element={<Home />} />
-        </Routes>
+        <div className="app">
+          <Sidebar />
+          <Routes>
+            <Route path="/arrivals" element={<Home status="arrivals" />} />
+            <Route path="/departures" element={<Home status="departures" />} />
+          </Routes>
+        </div>
       ) : (
         <Routes>
           <Route path="/" element={<Login />} />

@@ -5,6 +5,7 @@ import Select from "react-select";
 import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 import axios from "axios";
+import type { booking } from "../../types/bookingTypes";
 
 const customStyles = {
   control: (provided: React.CSSProperties) => ({
@@ -16,7 +17,7 @@ const customStyles = {
     border: 0,
     boxShadow: "rgba(149, 157, 165, 0.25) 0px 8px 24px",
     width: "100%",
-    color: "#000",
+    color: "var(--text)",
     backgroundColor: "#fff",
   }),
 
@@ -30,7 +31,7 @@ const customStyles = {
   singleValue: (provided: React.CSSProperties) => ({
     ...provided,
     fontSize: "inherit",
-    color: "#000",
+    color: "var(--text)",
   }),
 
   menu: (provided: React.CSSProperties) => ({
@@ -46,7 +47,7 @@ const customStyles = {
     fontSize: "1rem",
     fontFamily: '"IBM Plex Sans Thai", sans-serif',
     backgroundColor: state.isFocused ? "#f3f3f3" : "#fff",
-    color: "#000",
+    color: "var(--text)",
     cursor: "pointer",
   }),
 
@@ -60,7 +61,11 @@ const customStyles = {
   }),
 };
 
-const AddBooking = () => {
+const AddBooking = ({
+  appendToBookings,
+}: {
+  appendToBookings: (booking: booking) => void;
+}) => {
   const { user } = useAuth();
   const [submitting, setSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -72,7 +77,7 @@ const AddBooking = () => {
     price: "",
     paymentMethod: "",
     bookingId: "",
-    staffUsername: user?.username || "",
+    staffUsername: user?.username || "", // Might not be used, backend already does this, but just in case we want to display it in the future without fetching the booking again
   });
 
   const platformOptions = [
@@ -142,6 +147,19 @@ const AddBooking = () => {
       );
 
       toast.success(`การจองของ ${formData.name} ถูกเพิ่มเรียบร้อยแล้ว`);
+
+      appendToBookings(response.data.booking);
+      setFormData({
+        name: "",
+        checkIn: "",
+        checkOut: "",
+        platformId: "",
+        roomId: "",
+        price: "",
+        paymentMethod: "",
+        bookingId: "",
+        staffUsername: user?.username || "",
+      });
     } catch (err: any) {
       toast.error(err.message || "เกิดข้อผิดพลาดในการเพิ่มการจอง");
     }

@@ -130,7 +130,11 @@ export default function StatCard({ label, value }: StatCardProps) {
   }
 
   const flashColor =
-    flash === "green" ? "#51d1dc" : flash === "red" ? "#ff5050" : "#000000";
+    flash === "green"
+      ? "var(--primary-color)"
+      : flash === "red"
+        ? "#ff5050"
+        : "var(--text)000";
 
   return (
     <div

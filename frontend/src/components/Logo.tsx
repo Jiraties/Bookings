@@ -2,7 +2,7 @@ import "./Logo.css";
 
 type LogoProps = {
   isAbsolute: boolean;
-  extraText: string;
+  extraText?: string;
 };
 
 const Logo = ({ isAbsolute = false, extraText = "" }: LogoProps) => {

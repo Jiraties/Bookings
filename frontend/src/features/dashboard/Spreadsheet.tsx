@@ -1,28 +1,15 @@
 import { AgGridProvider, AgGridReact } from "ag-grid-react";
 import { useState } from "react";
-import { AllCommunityModule, ColDef } from "ag-grid-community";
+import { AllCommunityModule } from "ag-grid-community";
+import type { ColDef } from "ag-grid-community";
 import { themeQuartz } from "ag-grid-community";
+import type { booking } from "../../types/bookingTypes";
 import "./Spreadsheet.css";
-
-interface booking {
-  name: string;
-  checkIn: Date;
-  checkOut: Date;
-  nights: number;
-  platformId: "BOOK" | "HSTL" | "TRVL" | "AGDA";
-  roomId: string;
-  price: number;
-  paymentMethod: "OTA" | "Cash" | "Card" | "Transfer" | "Unpaid";
-  note: string;
-  deposit: number;
-  depositRepaid: boolean;
-  isCheckedIn: boolean;
-  staffUser: string;
-}
+import { useLocation } from "react-router";
 
 const myTheme = themeQuartz.withParams({
   fontFamily: "IBM Plex Sans Thai",
-  accentColor: "#51D1DC",
+  accentColor: "var(--primary-color)",
   backgroundColor: "#FFFFFF",
   browserColorScheme: "light",
   chromeBackgroundColor: "#FFFFFF",
@@ -59,8 +46,18 @@ const platformCell = (params: any) => {
   );
 };
 
-const Spreadsheet = ({ bookings }: { bookings: booking[] }) => {
+const Spreadsheet = ({
+  bookings,
+  setRowIsClicked,
+}: {
+  bookings: booking[];
+  setRowIsClicked: (booking: booking) => void;
+}) => {
   const modules = [AllCommunityModule];
+  const location = useLocation();
+  const status = location.pathname.includes("arrivals")
+    ? "arrivals"
+    : "departures";
 
   const dateValueFormater = (params: any) =>
     new Intl.DateTimeFormat("th-TH", {
@@ -74,8 +71,11 @@ const Spreadsheet = ({ bookings }: { bookings: booking[] }) => {
       field: "checkIn",
       valueFormatter: dateValueFormater,
     },
-    { field: "checkOut", valueFormatter: dateValueFormater },
-    { field: "nights" },
+    {
+      field: "checkOut",
+      valueFormatter: dateValueFormater,
+    },
+    { field: "nights", headerName: "คืน" },
 
     {
       field: "platformId",
@@ -107,15 +107,25 @@ const Spreadsheet = ({ bookings }: { bookings: booking[] }) => {
       cellClassRules: { green: (param) => param.value === true },
       pinned: "right",
     },
+    { field: "bookingId", headerName: "Booking ID", sortable: false },
+    {
+      field: "checkedInByStaffUsername",
+      headerName: "เช็คอินโดย",
+    },
+
     { field: "note", sortable: false },
   ]);
+
+  const onRowDoubleClicked = (event: any) => {
+    setRowIsClicked(event.data);
+  };
 
   return (
     <AgGridProvider modules={modules}>
       <div
         style={{
           boxShadow: "rgba(149, 157, 165, 0.25) 0px 8px 24px",
-          height: 500,
+          height: "100%",
           borderRadius: "   1rem",
         }}
       >
@@ -126,6 +136,7 @@ const Spreadsheet = ({ bookings }: { bookings: booking[] }) => {
           autoSizeStrategy={{
             type: "fitCellContents",
           }}
+          onRowDoubleClicked={onRowDoubleClicked}
         />
       </div>
     </AgGridProvider>

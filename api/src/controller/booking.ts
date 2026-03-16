@@ -35,11 +35,15 @@ export const newBooking = async (
       depositRepaid: null,
       staffUsername: booking.staffUsername,
       bookingId: booking.bookingId,
+      checkInByStaffUsername: null,
+      isCheckedIn: false,
     });
 
     await savedBooking.save();
 
-    res.status(201).json({ message: "Booking created successfully" });
+    res
+      .status(201)
+      .json({ message: "Booking created successfully", booking: savedBooking });
   } catch (err: any) {
     if (err.code === 11000) {
       return res.status(409).json({
@@ -48,5 +52,40 @@ export const newBooking = async (
     }
 
     res.status(400).json({ error: (err as Error).message });
+  }
+};
+
+export const getTodayArrivalBookings = async (req: Request, res: Response) => {
+  const today = new Date().toISOString().split("T")[0];
+  const todayDateString = new Date(today + "T00:00:00");
+
+  try {
+    const bookings = await Booking.find({ checkIn: { $gte: todayDateString } });
+    res.status(200).json({ bookings });
+    console.log(bookings);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch bookings" });
+  }
+};
+
+export const getTodayDepartureBookings = async (
+  req: Request,
+  res: Response,
+) => {
+  const now = new Date();
+  const startOfToday = new Date(now);
+  startOfToday.setHours(0, 0, 0, 0);
+
+  const startOfTomorrow = new Date(startOfToday);
+  startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
+
+  try {
+    const bookings = await Booking.find({
+      checkOut: { $gte: startOfToday, $lt: startOfTomorrow },
+    });
+    res.status(200).json({ bookings });
+    console.log(bookings);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch bookings" });
   }
 };

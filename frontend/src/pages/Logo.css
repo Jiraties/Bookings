@@ -10,7 +10,7 @@ h2 {
 }
 
 .logo__blueText {
-  color: #51d1dc;
+  color: var(--primary-color);
 }
 
 .absolute {
