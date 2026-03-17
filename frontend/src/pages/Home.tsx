@@ -14,12 +14,22 @@ import toast from "react-hot-toast";
 import { dummyBookings } from "./test";
 import ViewBooking from "../features/bookings/ViewBooking";
 import { useLocation } from "react-router";
+import ConfirmationModal from "../components/ConfirmationModal";
 
 const Home = ({ status }: { status: "arrivals" | "departures" }) => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const [addBookingIsOpen, setAddBookingIsOpen] = useState(false);
   const [rowIsClicked, setRowIsClicked] = useState<booking | null>(null);
+  const [bookings, setBookings] = useState<booking[]>([]);
+  const [confirmationModalIsOpen, setConfirmationModalIsOpen] = useState<{
+    isOpen: boolean;
+    booking: booking | null;
+  }>({
+    isOpen: false,
+    booking: null,
+  });
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const fullFormattedDate = new Intl.DateTimeFormat("th-TH", {
     day: "numeric",
@@ -27,9 +37,6 @@ const Home = ({ status }: { status: "arrivals" | "departures" }) => {
     year: "numeric",
     calendar: "gregory",
   }).format(new Date());
-
-  const [bookings, setBookings] = useState<booking[]>([]);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const bookingCheckInIsToday = (booking: booking) =>
     booking.checkIn.toDateString() === new Date().toDateString();
@@ -141,6 +148,10 @@ const Home = ({ status }: { status: "arrivals" | "departures" }) => {
     setBookings(formatBookingsDates(bookingsData));
   };
 
+  const removeBookingHandler = (booking: booking) => {
+    setConfirmationModalIsOpen({ isOpen: true, booking });
+  };
+
   useEffect(() => {
     fetchBookings();
   }, []);
@@ -163,7 +174,19 @@ const Home = ({ status }: { status: "arrivals" | "departures" }) => {
         onClose={() => setRowIsClicked(null)}
         className="home__modalCenter"
       >
-        <ViewBooking booking={rowIsClicked as booking} />
+        <ViewBooking
+          booking={rowIsClicked as booking}
+          removeBookingHandler={removeBookingHandler}
+        />
+      </Modal>
+      <Modal
+        open={confirmationModalIsOpen.isOpen}
+        onClose={() =>
+          setConfirmationModalIsOpen((prev) => ({ ...prev, isOpen: false }))
+        }
+        className="home__modalCenter"
+      >
+        <ConfirmationModal booking={confirmationModalIsOpen.booking} />
       </Modal>
       <header className="home__header">
         <div>
@@ -217,7 +240,7 @@ const Home = ({ status }: { status: "arrivals" | "departures" }) => {
         </div>
       </div>
       <Spreadsheet bookings={bookings} setRowIsClicked={setRowIsClicked} />
-      <button onClick={logoutHandler}>logout</button>
+      {/* <button onClick={logoutHandler}>logout</button> */}
     </main>
   );
 };

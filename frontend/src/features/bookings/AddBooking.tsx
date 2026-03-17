@@ -123,7 +123,7 @@ const AddBooking = ({
     setFormData((prev) => {
       const updated = { ...prev, [field]: value };
 
-      if (field === "platform") {
+      if (field === "platformId") {
         if (value === "BOOK") updated.paymentMethod = "OTA";
         if (value === "HSTL") updated.paymentMethod = "Unpaid";
       }
@@ -138,6 +138,27 @@ const AddBooking = ({
 
   const submitHandler = async () => {
     setSubmitting(true);
+
+    if (
+      !formData.name ||
+      !formData.checkIn ||
+      !formData.checkOut ||
+      !formData.platformId ||
+      !formData.roomId ||
+      !formData.price ||
+      !formData.paymentMethod ||
+      !formData.bookingId
+    ) {
+      toast.error("กรุณากรอกข้อมูลให้ครบทุกช่อง");
+      setSubmitting(false);
+      return;
+    }
+
+    if (new Date(formData.checkIn) > new Date(formData.checkOut)) {
+      toast.error("วันที่เช็คอินต้องไม่อยู่หลังวันที่เช็คเอาท์");
+      setSubmitting(false);
+      return;
+    }
 
     try {
       const response = await axios.post(
@@ -181,6 +202,7 @@ const AddBooking = ({
             type="text"
             className="boxInput"
             value={formData.name}
+            maxLength={30}
             onChange={(e) => formDataChangeHandler("name", e.target.value)}
             placeholder="เช่น Robert Brown"
           />
@@ -229,9 +251,11 @@ const AddBooking = ({
             styles={customStyles}
             options={platformOptions}
             placeholder="เลือกช่องทางการจอง"
-            value={platformOptions.find(
-              (option) => option.value === formData.platformId,
-            )}
+            value={
+              platformOptions.find(
+                (option) => option.value === formData.platformId,
+              ) || null
+            }
             formatOptionLabel={formatOptionLabel}
             onChange={(option) =>
               formDataChangeHandler("platformId", option?.value || "BOOK")
@@ -257,9 +281,11 @@ const AddBooking = ({
             options={paymentMethodOptions}
             placeholder="เลือกช่องทางการชำระเงิน"
             formatOptionLabel={formatPaymentMethodLabel}
-            value={paymentMethodOptions.find(
-              (option) => option.value === formData.paymentMethod,
-            )}
+            value={
+              paymentMethodOptions.find(
+                (option) => option.value === formData.paymentMethod,
+              ) || null
+            }
             onChange={(option) =>
               formDataChangeHandler("paymentMethod", option?.value || "")
             }

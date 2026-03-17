@@ -1,5 +1,5 @@
 .viewBooking__wrapper {
-  padding: 3rem 2rem 3rem 2rem;
+  /* padding: 3rem 2rem 3rem 2rem; */
   background-color: #fff;
   border-radius: 1rem;
   width: 50%;
@@ -11,6 +11,7 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 2rem;
+  padding: 3rem 2rem 1rem 2rem;
 }
 
 .viewBooking__name {
@@ -42,6 +43,15 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  padding: 0 1rem 0 2rem;
+  margin-bottom: 2rem;
+  border-right: 1px solid #e0e0e0;
+}
+
+.viewBooking__mainRight {
+  display: flex;
+  flex-direction: column;
+  padding: 0 2rem 2rem 2rem;
 }
 
 .viewBooking__infoText {
@@ -50,7 +60,7 @@
 
 .viewBooking__platform {
   display: flex;
-  align-items: self-end;
+  align-items: center;
   gap: 0.7rem;
 }
 
@@ -59,4 +69,38 @@
   height: 2rem;
   object-fit: contain;
   border-radius: 0.5rem;
+}
+
+.viewBooking__priceLIst {
+  display: flex;
+  margin-top: 0.5rem;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.viewBooking__price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.viewBooking__unpaid {
+  color: #fd4169;
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  font-weight: 500;
+}
+
+.viewBooking__unpaidPrice {
+  /* padding: 1rem;
+  background-color: #fd416920;
+  border-radius: 0.5rem; */
+}
+
+.viewBooking__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 0 2rem 2rem 2rem;
 }

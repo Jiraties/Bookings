@@ -1,3 +1,4 @@
+import ActionButton from "../../components/ActionButton";
 import type { booking } from "../../types/bookingTypes";
 import "./ViewBooking.css";
 
@@ -30,7 +31,13 @@ const platformMap = {
   },
 };
 
-const ViewBooking = ({ booking }: { booking: booking }) => {
+const ViewBooking = ({
+  booking,
+  removeBookingHandler,
+}: {
+  booking: booking;
+  removeBookingHandler: (booking: booking) => void;
+}) => {
   return (
     <div className="viewBooking__wrapper">
       <div className="viewBooking__top">
@@ -85,10 +92,56 @@ const ViewBooking = ({ booking }: { booking: booking }) => {
             <span className="viewBooking__label">Booking No: </span>
             <p className="viewBooking__infoText">{booking.bookingId}</p>
           </div>
+          <div className="viewBooking__item">
+            <span className="viewBooking__label">Staff ที่บันทึกรายการ: </span>
+            <p className="viewBooking__infoText">{booking.staffUsername}</p>
+          </div>
         </div>
         <div className="viewBooking__mainRight">
-          <p>ค่าใช้จ่าย</p>
+          {/* <p>ค่าใช้จ่าย</p> */}
+          <div className="viewBooking__priceLIst">
+            <div
+              className={
+                booking.paymentMethod === "Unpaid"
+                  ? "viewBooking__price viewBooking__unpaidPrice"
+                  : "viewBooking__price"
+              }
+            >
+              <div>
+                <p className="viewBooking__infoText">
+                  {booking.price.toLocaleString("th-TH")} บาท
+                </p>
+                <p>ค่าห้อง</p>
+              </div>
+              <p
+                className={
+                  booking.paymentMethod === "Unpaid"
+                    ? "viewBooking__unpaid"
+                    : ""
+                }
+              >
+                {booking.paymentMethod}
+                {booking.paymentMethod === "Unpaid" && (
+                  <i className="bx bx-error " style={{ fontSize: "1.4rem" }} />
+                )}
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
+      <div className="viewBooking__actions">
+        <ActionButton text="แก้ไขการจอง" onClick={() => {}} icon="bx-edit" />
+        <ActionButton
+          text="ลบการจอง"
+          onClick={() => removeBookingHandler(booking)}
+          icon="bx-trash"
+        />
+        <ActionButton
+          text="Check In"
+          onClick={() => {}}
+          icon="bx-check-circle"
+          highlight
+        />
       </div>
     </div>
   );

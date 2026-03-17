@@ -89,3 +89,19 @@ export const getTodayDepartureBookings = async (
     res.status(500).json({ error: "Failed to fetch bookings" });
   }
 };
+
+export const removeBooking = async (req: Request, res: Response) => {
+  const { bookingId } = req.params;
+
+  console.log("deleteing, " + bookingId);
+
+  try {
+    const deletedBooking = await Booking.findOneAndDelete({ bookingId });
+    res.status(200).json({
+      user: deletedBooking,
+      message: `Successfully deleted bookingId: ${bookingId}`,
+    });
+  } catch (err) {
+    res.status(400).json({ error: "Deletion Unsuccessful" });
+  }
+};

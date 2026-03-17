@@ -3,6 +3,7 @@ import {
   getTodayArrivalBookings,
   getTodayDepartureBookings,
   newBooking,
+  removeBooking,
 } from "../controller/booking";
 
 const bookingsRouter = express.Router();
@@ -10,5 +11,6 @@ const bookingsRouter = express.Router();
 bookingsRouter.post("/newBooking", newBooking);
 bookingsRouter.get("/todayArrivals", getTodayArrivalBookings);
 bookingsRouter.get("/todayDepartures", getTodayDepartureBookings);
+bookingsRouter.delete("/removeBooking/:bookingId", removeBooking);
 
 export default bookingsRouter;
