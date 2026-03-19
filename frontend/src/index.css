@@ -8,6 +8,7 @@
   --text: #000;
   --lightGreen: rgb(178, 249, 226);
   --green: rgb(30, 203, 131);
+  --red: #fd4169;
   color: var(--text);
   background-color: #ffffff;
 

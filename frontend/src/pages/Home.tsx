@@ -1,20 +1,22 @@
-import { useEffect, useState } from "react";
 import StatCard from "../features/dashboard/StatCard";
 import Logo from "../components/Logo";
 import axios from "axios";
-import { useAuth } from "../context/AuthContext";
 
-import "./Home.css";
 import ActionButton from "../components/ActionButton";
 import Spreadsheet from "../features/dashboard/Spreadsheet";
-import { Modal } from "@mui/material";
 import AddBooking from "../features/bookings/AddBooking";
-import type { booking } from "../types/bookingTypes";
 import toast from "react-hot-toast";
-import { dummyBookings } from "./test";
 import ViewBooking from "../features/bookings/ViewBooking";
-import { useLocation } from "react-router";
 import ConfirmationModal from "../components/ConfirmationModal";
+
+import { useEffect, useState } from "react";
+import { Modal } from "@mui/material";
+import { useAuth } from "../context/AuthContext";
+import { useLocation } from "react-router";
+
+import type { booking } from "../types/bookingTypes";
+
+import "./Home.css";
 
 const Home = ({ status }: { status: "arrivals" | "departures" }) => {
   const { user, logout } = useAuth();
@@ -115,22 +117,19 @@ const Home = ({ status }: { status: "arrivals" | "departures" }) => {
   const appendToBookings = (booking: booking) => {
     const formattedBooking = formatBookingsDates([booking])[0];
 
-    if (formattedBooking.checkIn.toDateString() === new Date().toDateString())
+    if (
+      formattedBooking.checkIn.toDateString() === new Date().toDateString() &&
+      location.pathname === "/arrivals"
+    )
       setBookings((prev) => [...prev, formattedBooking]);
 
     setAddBookingIsOpen(false);
   };
 
-  const logoutHandler = async () => {
-    await axios.post(
-      "http://localhost:3000/auth/logout",
-      {},
-      {
-        withCredentials: true,
-      },
-    );
-
-    logout();
+  const closeAllModals = () => {
+    setRowIsClicked(null);
+    setConfirmationModalIsOpen({ isOpen: false, booking: null });
+    fetchBookings();
   };
 
   const fetchBookings = async () => {
@@ -186,7 +185,10 @@ const Home = ({ status }: { status: "arrivals" | "departures" }) => {
         }
         className="home__modalCenter"
       >
-        <ConfirmationModal booking={confirmationModalIsOpen.booking} />
+        <ConfirmationModal
+          booking={confirmationModalIsOpen.booking}
+          closeAllModals={closeAllModals}
+        />
       </Modal>
       <header className="home__header">
         <div>

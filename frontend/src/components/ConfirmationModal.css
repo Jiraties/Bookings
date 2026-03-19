@@ -11,3 +11,11 @@
   display: flex;
   flex-direction: row-reverse;
 }
+
+.confirmationModal__headerText {
+  font-weight: 500;
+}
+
+.confirmationModal__button {
+  background-color: var(--red);
+}

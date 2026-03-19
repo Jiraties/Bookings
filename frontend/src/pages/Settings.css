@@ -1,0 +1,37 @@
+.settings {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2.5rem;
+}
+
+.settings__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.settings__list {
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: rgba(149, 157, 165, 0.25) 0px 8px 24px;
+}
+
+.settings__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.settings__logout {
+  color: var(--red);
+  font-weight: 500;
+}
+
+.settings__activities {
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: rgba(149, 157, 165, 0.25) 0px 8px 24px;
+}

@@ -31,7 +31,7 @@
 }
 
 .notCheckedIn {
-  color: #fd4169;
+  color: var(--red);
 }
 
 .viewBooking__main {
@@ -85,7 +85,7 @@
 }
 
 .viewBooking__unpaid {
-  color: #fd4169;
+  color: var(--red);
   display: flex;
   gap: 0.4rem;
   align-items: center;

@@ -1,8 +1,9 @@
-import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
 import User from "../models/user";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { Request, Response, NextFunction } from "express";
+import { logActivity } from "../services/activityServices";
 
 dotenv.config();
 
@@ -54,7 +55,10 @@ export const login = async (
       return res.status(401).json({ error: "อีเมลหรือรหัสผ่านไม่ถูกต้อง" });
 
     const valid = await bcrypt.compare(password, user.password);
-    if (!valid) throw new Error("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+    if (!valid) {
+      logActivity(username, "LOGIN", { success: false });
+      throw new Error("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+    }
 
     if (!process.env.JWT_SECRET)
       throw new Error("JWT_SECRET not found serverside");
@@ -81,6 +85,8 @@ export const login = async (
         admin: user.admin,
       },
     });
+
+    logActivity(username, "LOGIN", { success: true });
   } catch (err: any) {
     return res.status(400).json({ error: err.message });
   }
@@ -117,5 +123,9 @@ export const logout = (req: Request, res: Response) => {
   });
 
   res.status(200).json({ message: "Successfully logged out" });
+
+  console.log(req.user);
+
+  logActivity(req.user?.userId, "LOGOUT", { success: true });
   console.log("Logged Out");
 };

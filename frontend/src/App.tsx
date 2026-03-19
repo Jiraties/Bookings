@@ -8,6 +8,8 @@ import { useAuth } from "./context/AuthContext";
 
 import "./App.css";
 import Sidebar from "./components/Sidebar";
+import NotFound from "./pages/NotFound";
+import Settings from "./pages/Settings";
 
 function App() {
   const { isAuthenticated, login } = useAuth();
@@ -56,11 +58,14 @@ function App() {
           <Routes>
             <Route path="/arrivals" element={<Home status="arrivals" />} />
             <Route path="/departures" element={<Home status="departures" />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
       ) : (
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       )}
     </div>

@@ -100,7 +100,7 @@ const Spreadsheet = ({
       filter: true,
       cellClassRules: { red: (param) => param.value === "Unpaid" },
     },
-    { field: "roomId", headerName: "ห้อง" },
+    { field: "roomId", headerName: "ห้อง", filter: true },
     {
       field: "isCheckedIn",
       headerName: "สถานะ Check-In",

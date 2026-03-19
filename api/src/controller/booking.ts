@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Booking from "../models/booking";
+import { logActivity } from "../services/activityServices";
 
 export const newBooking = async (
   req: Request,
@@ -44,6 +45,19 @@ export const newBooking = async (
     res
       .status(201)
       .json({ message: "Booking created successfully", booking: savedBooking });
+
+    logActivity(req.user?.userId, "NEW_BOOKING", {
+      snapshot: {
+        name: booking.name,
+        checkIn: booking.checkIn,
+        checkOut: booking.checkOut,
+        platformId: booking.platformId,
+        roomId: booking.roomId,
+        price: booking.price,
+        paymentMethod: booking.paymentMethod,
+        bookingId: booking.bookingId,
+      },
+    });
   } catch (err: any) {
     if (err.code === 11000) {
       return res.status(409).json({
@@ -97,9 +111,25 @@ export const removeBooking = async (req: Request, res: Response) => {
 
   try {
     const deletedBooking = await Booking.findOneAndDelete({ bookingId });
+
+    if (!deletedBooking) throw new Error("Deletion Unsuccessfull");
+
     res.status(200).json({
       user: deletedBooking,
       message: `Successfully deleted bookingId: ${bookingId}`,
+    });
+
+    logActivity(req.user?.userId, "REMOVE_BOOKING", {
+      snapshot: {
+        name: deletedBooking.name,
+        checkIn: deletedBooking.checkIn,
+        checkOut: deletedBooking.checkOut,
+        platformId: deletedBooking.platformId,
+        roomId: deletedBooking.roomId,
+        price: deletedBooking.price,
+        paymentMethod: deletedBooking.paymentMethod,
+        bookingId: deletedBooking.bookingId,
+      },
     });
   } catch (err) {
     res.status(400).json({ error: "Deletion Unsuccessful" });

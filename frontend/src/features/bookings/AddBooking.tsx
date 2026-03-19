@@ -95,6 +95,54 @@ const AddBooking = ({
     { value: "Transfer", label: "Transfer" },
   ];
 
+  const fillDummyData = () => {
+    if (submitting) return;
+
+    const names = [
+      "John Smith",
+      "Emma Johnson",
+      "Michael Brown",
+      "Olivia Davis",
+      "William Garcia",
+      "Sophia Martinez",
+    ];
+
+    const rooms = ["Pottery 1", "Loft 2", "Garden 3", "Dorm A1", "Suite 5"];
+
+    const platforms = platformOptions.map((p) => p.value);
+    const payments = paymentMethodOptions.map((p) => p.value);
+
+    const random = <T,>(arr: T[]): T =>
+      arr[Math.floor(Math.random() * arr.length)];
+
+    const today = new Date();
+    const formatDate = (date: Date) => date.toISOString().split("T")[0];
+
+    const nights = Math.floor(Math.random() * 4) + 1; // 1–4 nights
+
+    const checkInDate = new Date(today);
+    const checkOutDate = new Date(today);
+    checkOutDate.setDate(today.getDate() + nights);
+
+    const platform = random(platforms);
+
+    let payment = random(payments);
+    if (platform === "BOOK") payment = "OTA";
+    if (platform === "HSTL") payment = "Unpaid";
+
+    setFormData({
+      name: random(names),
+      checkIn: formatDate(checkInDate), // ✅ always today
+      checkOut: formatDate(checkOutDate),
+      platformId: platform,
+      roomId: random(rooms),
+      price: String((Math.floor(Math.random() * 20) + 10) * 100),
+      paymentMethod: payment,
+      bookingId: String(Math.floor(1000000000 + Math.random() * 9000000000)),
+      staffUsername: user?.username || "",
+    });
+  };
+
   const formatOptionLabel = ({
     label,
     color,
@@ -167,7 +215,9 @@ const AddBooking = ({
         { withCredentials: true },
       );
 
-      toast.success(`การจองของ ${formData.name} ถูกเพิ่มเรียบร้อยแล้ว`);
+      toast.success(`การจองของ ${formData.name} ถูกเพิ่มเรียบร้อยแล้ว`, {
+        duration: 5000,
+      });
 
       appendToBookings(response.data.booking);
       setFormData({
@@ -302,6 +352,12 @@ const AddBooking = ({
           />
         </div>
       </div>
+      <ActionButton
+        text="DEBUG | Dummy Data"
+        icon="bx-test"
+        onClick={fillDummyData}
+        className="addBooking__submit"
+      />
       <ActionButton
         text="เพิ่มการจอง"
         icon="bx-plus"
