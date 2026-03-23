@@ -17,13 +17,17 @@ import { useLocation } from "react-router";
 import type { booking } from "../types/bookingTypes";
 
 import "./Home.css";
+import CheckIn from "../features/bookings/CheckIn";
 
 const Home = ({ status }: { status: "arrivals" | "departures" }) => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const [addBookingIsOpen, setAddBookingIsOpen] = useState(false);
-  const [rowIsClicked, setRowIsClicked] = useState<booking | null>(null);
+  const [viewBookingBooking, setViewBookingBooking] = useState<booking | null>(
+    null,
+  );
   const [bookings, setBookings] = useState<booking[]>([]);
+  const [checkInIsOpen, setCheckInIsOpen] = useState(false);
   const [confirmationModalIsOpen, setConfirmationModalIsOpen] = useState<{
     isOpen: boolean;
     booking: booking | null;
@@ -127,7 +131,7 @@ const Home = ({ status }: { status: "arrivals" | "departures" }) => {
   };
 
   const closeAllModals = () => {
-    setRowIsClicked(null);
+    setViewBookingBooking(null);
     setConfirmationModalIsOpen({ isOpen: false, booking: null });
     fetchBookings();
   };
@@ -169,12 +173,13 @@ const Home = ({ status }: { status: "arrivals" | "departures" }) => {
         <AddBooking appendToBookings={appendToBookings} />
       </Modal>
       <Modal
-        open={!!rowIsClicked}
-        onClose={() => setRowIsClicked(null)}
+        open={!!viewBookingBooking}
+        onClose={() => setViewBookingBooking(null)}
         className="home__modalCenter"
       >
         <ViewBooking
-          booking={rowIsClicked as booking}
+          booking={viewBookingBooking as booking}
+          setCheckInIsOpen={setCheckInIsOpen}
           removeBookingHandler={removeBookingHandler}
         />
       </Modal>
@@ -190,6 +195,15 @@ const Home = ({ status }: { status: "arrivals" | "departures" }) => {
           closeAllModals={closeAllModals}
         />
       </Modal>
+      {viewBookingBooking && (
+        <Modal
+          open={checkInIsOpen}
+          className="home__modalCenter"
+          onClose={() => setCheckInIsOpen(false)}
+        >
+          <CheckIn booking={viewBookingBooking} />
+        </Modal>
+      )}
       <header className="home__header">
         <div>
           <h1>
@@ -241,7 +255,10 @@ const Home = ({ status }: { status: "arrivals" | "departures" }) => {
           />
         </div>
       </div>
-      <Spreadsheet bookings={bookings} setRowIsClicked={setRowIsClicked} />
+      <Spreadsheet
+        bookings={bookings}
+        setViewBookingBooking={setViewBookingBooking}
+      />
       {/* <button onClick={logoutHandler}>logout</button> */}
     </main>
   );

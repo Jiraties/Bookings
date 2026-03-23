@@ -1,10 +1,7 @@
 .viewBooking__wrapper {
-  /* padding: 3rem 2rem 3rem 2rem; */
-  background-color: #fff;
+  background-color: var(--background);
   border-radius: 1rem;
-  width: 50%;
-  /* height: 50%; */
-  min-width: 40rem;
+  width: 50rem;
 }
 
 .viewBooking__top {
@@ -44,8 +41,14 @@
   flex-direction: column;
   gap: 1.5rem;
   padding: 0 1rem 0 2rem;
+  height: 100%;
   margin-bottom: 2rem;
+
   border-right: 1px solid #e0e0e0;
+  overflow-y: scroll;
+  height: 25rem;
+  scrollbar-color: #e0e0e0 #fff;
+  scrollbar-width: thin;
 }
 
 .viewBooking__mainRight {
@@ -103,4 +106,39 @@
   justify-content: flex-end;
   gap: 1rem;
   padding: 0 2rem 2rem 2rem;
+}
+
+.viewBooking__bedIcon {
+  height: 3.25rem;
+  width: 3.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1rem;
+  /* background-color: #1e3a5f; */
+  background-color: #4f7c6e;
+
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.viewBooking__bedIconUnpaid {
+  height: 3.25rem;
+  width: 3.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1rem;
+  /* background-color: #1e3a5f; */
+  background-color: var(--red);
+
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.viewBooking__noteTextArea {
+  margin-top: 0.5rem;
+  width: 100%;
+  resize: none;
+  font-size: 1rem;
 }

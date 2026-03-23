@@ -1,5 +1,5 @@
 .sidebar {
-  background-color: #f6f6f6;
+  background-color: var(--light-background);
 
   padding: 2.5rem;
 }
@@ -23,7 +23,7 @@
   /* font-size: 1.2rem; */
   cursor: pointer;
   border-radius: 1rem;
-  background-color: #fff;
+  background-color: var(--background);
   box-shadow: rgba(149, 157, 165, 0.25) 0px 8px 24px;
   display: flex;
   gap: 0.5rem;

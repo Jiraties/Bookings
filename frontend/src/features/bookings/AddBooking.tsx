@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import type { booking } from "../../types/bookingTypes";
 
-const customStyles = {
+export const customStyles = {
   control: (provided: React.CSSProperties) => ({
     ...provided,
     fontSize: "inherit",
@@ -78,6 +78,7 @@ const AddBooking = ({
     paymentMethod: "",
     bookingId: "",
     staffUsername: user?.username || "", // Might not be used, backend already does this, but just in case we want to display it in the future without fetching the booking again
+    note: "",
   });
 
   const platformOptions = [
@@ -140,6 +141,7 @@ const AddBooking = ({
       paymentMethod: payment,
       bookingId: String(Math.floor(1000000000 + Math.random() * 9000000000)),
       staffUsername: user?.username || "",
+      note: "",
     });
   };
 
@@ -230,6 +232,7 @@ const AddBooking = ({
         paymentMethod: "",
         bookingId: "",
         staffUsername: user?.username || "",
+        note: "",
       });
     } catch (err: any) {
       toast.error(err.message || "เกิดข้อผิดพลาดในการเพิ่มการจอง");
@@ -349,6 +352,16 @@ const AddBooking = ({
             value={formData.bookingId}
             placeholder="เช่น 4012345678"
             onChange={(e) => formDataChangeHandler("bookingId", e.target.value)}
+          />
+        </div>
+        <div>
+          <p className="addBooking__label">Note</p>
+          <input
+            className="boxInput"
+            type="text"
+            value={formData.note}
+            placeholder="เช่น แขกเดิมพักต่อ 1 คืน"
+            onChange={(e) => formDataChangeHandler("note", e.target.value)}
           />
         </div>
       </div>

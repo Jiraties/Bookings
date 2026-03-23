@@ -6,6 +6,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authMiddleware from "./middleware/authMiddleware";
 import bookingsRouter from "./routes/bookings";
+import activitiesRouter from "./routes/activities";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(cookieParser());
 
 app.use("/auth", authRouter);
 app.use("/bookings", authMiddleware, bookingsRouter);
+app.use("/activities", authMiddleware, activitiesRouter);
 
 mongoose
   .connect(process.env.MONGO_URI || "")

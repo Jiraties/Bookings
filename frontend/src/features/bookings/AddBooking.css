@@ -1,10 +1,9 @@
 .addBooking__wrapper {
-  padding: 2rem;
-  background-color: #fff;
+  background-color: var(--background);
   border-radius: 1rem;
-  width: 50%;
-  /* height: 50%; */
-  min-width: 40rem;
+  width: 50rem;
+
+  padding: 2rem;
 }
 
 .addBooking__title {

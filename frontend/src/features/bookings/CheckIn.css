@@ -1,0 +1,30 @@
+.checkIn__wrapper {
+  background-color: var(--background);
+  border-radius: 1rem;
+  width: 50rem;
+
+  padding: 2rem;
+}
+
+.checkIn__title {
+  font-weight: 500;
+  margin-bottom: 2rem;
+}
+
+.checkIn__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.checkIn__right {
+  border-radius: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.checkIn__label {
+  margin-bottom: 0.5rem;
+}

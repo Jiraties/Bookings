@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@boxicons/react": "^1.0.3",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@lottiefiles/dotlottie-react": "^0.18.3",
@@ -17,6 +18,7 @@
     "ag-grid-react": "^35.1.0",
     "axios": "^1.13.6",
     "boxicons": "^2.1.4",
+    "i18n-iso-countries": "^7.14.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-hot-toast": "^2.6.0",

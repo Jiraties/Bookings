@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import e, { NextFunction, Request, Response } from "express";
 import Booking from "../models/booking";
 import { logActivity } from "../services/activityServices";
 
@@ -31,7 +31,7 @@ export const newBooking = async (
       roomId: booking.roomId,
       price: booking.price,
       paymentMethod: booking.paymentMethod,
-      note: "",
+      note: booking.note || "",
       deposit: null,
       depositRepaid: null,
       staffUsername: booking.staffUsername,
@@ -134,4 +134,23 @@ export const removeBooking = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(400).json({ error: "Deletion Unsuccessful" });
   }
+};
+
+type checkInData = {
+  deposit: number;
+  checkInByStaffUsername: string;
+};
+
+export const checkIn = async (req: Request, res: Response) => {
+  const bookingId = req.body.bookingId;
+  const checkInData: checkInData = req.body.checkInData;
+
+  const response = Booking.findOneAndUpdate(
+    { bookingId },
+    {
+      deposit: checkInData.deposit,
+      isCheckedIn: true,
+      checkInByStaffUsername: req.user?.userId,
+    },
+  );
 };

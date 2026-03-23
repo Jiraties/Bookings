@@ -10,10 +10,10 @@ import { useLocation } from "react-router";
 const myTheme = themeQuartz.withParams({
   fontFamily: "IBM Plex Sans Thai",
   accentColor: "var(--primary-color)",
-  backgroundColor: "#FFFFFF",
+  backgroundColor: "var(--background)",
   browserColorScheme: "light",
-  chromeBackgroundColor: "#FFFFFF",
-  foregroundColor: "#000000",
+  chromeBackgroundColor: "var(--background)",
+  foregroundColor: "var(--text)",
   spacing: "0.6rem",
   wrapperBorderRadius: "1rem",
   wrapperBorder: false,
@@ -48,10 +48,10 @@ const platformCell = (params: any) => {
 
 const Spreadsheet = ({
   bookings,
-  setRowIsClicked,
+  setViewBookingBooking,
 }: {
   bookings: booking[];
-  setRowIsClicked: (booking: booking) => void;
+  setViewBookingBooking: (booking: booking) => void;
 }) => {
   const modules = [AllCommunityModule];
   const location = useLocation();
@@ -117,7 +117,7 @@ const Spreadsheet = ({
   ]);
 
   const onRowDoubleClicked = (event: any) => {
-    setRowIsClicked(event.data);
+    setViewBookingBooking(event.data);
   };
 
   return (

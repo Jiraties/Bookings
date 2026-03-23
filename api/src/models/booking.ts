@@ -15,9 +15,9 @@ export interface booking extends Document {
   deposit: number | null;
   depositRepaid: boolean | null;
   staffUsername: string;
-  bookingId: string;
   isCheckedIn: boolean;
   checkInByStaffUsername: string | null;
+  bookingId: string;
 }
 
 const bookingSchema = new mongoose.Schema({

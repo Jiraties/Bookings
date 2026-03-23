@@ -13,7 +13,7 @@
 
 .settings__list {
   padding: 1.5rem;
-  background-color: #fff;
+  background-color: var(--background);
   border-radius: 1rem;
   box-shadow: rgba(149, 157, 165, 0.25) 0px 8px 24px;
 }
@@ -29,9 +29,50 @@
   font-weight: 500;
 }
 
+.settings__logout i {
+  color: var(--red);
+  font-weight: 500;
+}
+
 .settings__activities {
-  padding: 1.5rem;
+  padding: 0 1.5rem 1.5rem 1.5rem;
   background-color: #fff;
   border-radius: 1rem;
+
   box-shadow: rgba(149, 157, 165, 0.25) 0px 8px 24px;
+  display: flex;
+  flex-direction: column;
+
+  height: 50rem;
+  overflow-y: scroll;
+  scrollbar-color: #e0e0e0 #fff;
+  scrollbar-width: thin;
+}
+
+.settings__activity {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-bottom: 0.1rem solid #e8e8e8;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.settings__activity h3,
+.settings__activity strong {
+  font-weight: 600;
+}
+
+.settings__activityDetails {
+  padding: 1rem;
+  box-shadow: rgba(149, 157, 165, 0.25) 0px 8px 24px;
+
+  border-radius: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.settings__activityIcon {
+  font-size: 1.5rem;
+  color: var(--primary-color);
 }
