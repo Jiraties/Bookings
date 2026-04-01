@@ -22,9 +22,9 @@ const myTheme = themeQuartz.withParams({
 const platformCell = (params: any) => {
   const platformMap = {
     BOOK: { label: "Booking.com", color: "#003580" },
-    AGDA: { label: "Agoda", color: "#19AC5B" },
-    TRVL: { label: "Traveloka", color: "#00ADEF" },
-    HSTL: { label: "Hostelworld", color: "#F15A24" },
+    AGOD: { label: "Agoda", color: "#19AC5B" },
+    TRAV: { label: "Traveloka", color: "#00ADEF" },
+    HOST: { label: "Hostelworld", color: "#F15A24" },
     WALK: { label: "Walk-In", color: "#f12424" },
   };
 
@@ -136,6 +136,7 @@ const Spreadsheet = ({
           autoSizeStrategy={{
             type: "fitCellContents",
           }}
+          // gridOptions={{ enableCellTextSelection: true }}
           onRowDoubleClicked={onRowDoubleClicked}
         />
       </div>

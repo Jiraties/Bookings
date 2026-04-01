@@ -1,23 +1,40 @@
 import mongoose from "mongoose";
 
-type platformIdType = "OTA" | "Cash" | "Card" | "Transfer" | "Unpaid";
+type PlatformId = "BOOK" | "HOST" | "TRAV" | "AGOD" | "WALK";
+type PaymentMethod = "OTA" | "Cash" | "Card" | "Transfer" | "Unpaid";
+type Status = "booked" | "checkedIn" | "checkedOut";
+
+interface EncryptedField {
+  ciphertext: string;
+  iv: string;
+  authTag: string;
+}
+
+interface Passport {
+  passportHash?: string;
+  nationality?: string;
+  passportNo?: EncryptedField;
+  passportName?: EncryptedField;
+}
 
 export interface booking extends Document {
   name: string;
   checkIn: Date;
   checkOut: Date;
   nights: number;
-  platformId: "BOOK" | "HSTL" | "TRVL" | "AGDA";
+  platformId: PlatformId;
   roomId: string;
   price: number;
-  paymentMethod: "OTA" | "Cash" | "Card" | "Transfer" | "Unpaid";
-  note: string | null;
-  deposit: number | null;
-  depositRepaid: boolean | null;
+  paymentMethod: PaymentMethod;
+  note?: string;
+  deposit?: number | null;
+  depositRepaid?: boolean | null;
   staffUsername: string;
-  isCheckedIn: boolean;
-  checkInByStaffUsername: string | null;
+  status: Status;
+  checkInByStaffUsername?: string | null;
   bookingId: string;
+
+  passport?: Passport;
 }
 
 const bookingSchema = new mongoose.Schema({
@@ -34,8 +51,26 @@ const bookingSchema = new mongoose.Schema({
   depositRepaid: { type: Boolean, default: null },
   staffUsername: { type: String },
   bookingId: { type: String, unique: true },
-  isCheckedIn: { type: Boolean, default: false },
+  status: {
+    type: String,
+    enum: ["booked", "checkedIn", "checkedOut"],
+    default: "booked",
+  },
   checkInByStaffUsername: { type: String, default: null },
+  passport: {
+    passportHash: String,
+    nationality: { type: String },
+    passportNo: {
+      ciphertext: { type: String },
+      iv: { type: String },
+      authTag: { type: String },
+    },
+    passportName: {
+      ciphertext: { type: String },
+      iv: { type: String },
+      authTag: { type: String },
+    },
+  },
 });
 
 export default mongoose.model<booking>("Booking", bookingSchema);

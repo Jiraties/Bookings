@@ -45,6 +45,7 @@ export const login = async (
   next: NextFunction,
 ) => {
   try {
+    console.log("LOGGIN IN! ");
     const { username, password } = req.body;
 
     if (!username || !password)
@@ -64,7 +65,7 @@ export const login = async (
       throw new Error("JWT_SECRET not found serverside");
 
     const token = jwt.sign(
-      { userId: user._id, admin: user.admin },
+      { userId: user._id, admin: user.admin, username: user.username },
       process.env.JWT_SECRET,
       {
         expiresIn: "1d",
@@ -126,6 +127,6 @@ export const logout = (req: Request, res: Response) => {
 
   console.log(req.user);
 
-  logActivity(req.user?.userId, "LOGOUT", { success: true });
+  logActivity(req.user?.username, "LOGOUT", { success: true });
   console.log("Logged Out");
 };

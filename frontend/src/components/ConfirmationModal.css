@@ -19,3 +19,8 @@
 .confirmationModal__button {
   background-color: var(--red);
 }
+
+.confirmationModal strong {
+  color: var(--red);
+  font-weight: 500;
+}

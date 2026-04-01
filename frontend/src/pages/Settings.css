@@ -58,9 +58,12 @@
   padding-bottom: 1.5rem;
 }
 
-.settings__activity h3,
-.settings__activity strong {
+.settings__activity h3 {
   font-weight: 600;
+}
+
+.settings__activity strong {
+  font-weight: 500;
 }
 
 .settings__activityDetails {

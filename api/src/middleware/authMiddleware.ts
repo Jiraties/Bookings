@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
-interface MyJwtPayload {
+export interface MyJwtPayload {
   userId: string;
   admin: boolean;
+  username: string;
 }
 
 const authMiddleware = (req: Request, res: Response, next: NextFunction) => {

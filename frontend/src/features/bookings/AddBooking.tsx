@@ -83,9 +83,10 @@ const AddBooking = ({
 
   const platformOptions = [
     { value: "BOOK", label: "Booking.com", color: "#003580" },
-    { value: "HSTL", label: "Hostelworld", color: "#F15A24" },
-    { value: "AGDA", label: "Agoda", color: "#19AC5B" },
-    { value: "TRVL", label: "Traveloka", color: "#00ADEF" },
+    { value: "HOST", label: "Hostelworld", color: "#F15A24" },
+    { value: "AGOD", label: "Agoda", color: "#19AC5B" },
+    { value: "TRAV", label: "Traveloka", color: "#00ADEF" },
+    { value: "WALK", label: "Walk-In", color: "#f12424" },
   ];
 
   const paymentMethodOptions = [
@@ -129,7 +130,7 @@ const AddBooking = ({
 
     let payment = random(payments);
     if (platform === "BOOK") payment = "OTA";
-    if (platform === "HSTL") payment = "Unpaid";
+    if (platform === "HOST") payment = "Unpaid";
 
     setFormData({
       name: random(names),
@@ -175,7 +176,7 @@ const AddBooking = ({
 
       if (field === "platformId") {
         if (value === "BOOK") updated.paymentMethod = "OTA";
-        if (value === "HSTL") updated.paymentMethod = "Unpaid";
+        if (value === "HOST") updated.paymentMethod = "Unpaid";
       }
 
       return updated;
@@ -204,7 +205,7 @@ const AddBooking = ({
       return;
     }
 
-    if (new Date(formData.checkIn) > new Date(formData.checkOut)) {
+    if (new Date(formData.checkIn) >= new Date(formData.checkOut)) {
       toast.error("วันที่เช็คอินต้องไม่อยู่หลังวันที่เช็คเอาท์");
       setSubmitting(false);
       return;

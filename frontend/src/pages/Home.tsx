@@ -12,7 +12,7 @@ import ConfirmationModal from "../components/ConfirmationModal";
 import { useEffect, useState } from "react";
 import { Modal } from "@mui/material";
 import { useAuth } from "../context/AuthContext";
-import { useLocation } from "react-router";
+import { Link, useLocation } from "react-router";
 
 import type { booking } from "../types/bookingTypes";
 
@@ -230,10 +230,13 @@ const Home = ({ status }: { status: "arrivals" | "departures" }) => {
 
         <div className="home__headerProfile">
           <p>{user?.name}</p>
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3m972e8FEvBi7ETC03avlJcZDg8nT9dWLSw&s"
-            alt="profilePicture"
-          />
+          <Link to={"/settings"}>
+            <img
+              className="home__profileImg"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3m972e8FEvBi7ETC03avlJcZDg8nT9dWLSw&s"
+              alt="profilePicture"
+            />
+          </Link>
         </div>
       </header>
       <div className="home__statsAndActions">

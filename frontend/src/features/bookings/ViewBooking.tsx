@@ -9,13 +9,13 @@ const platformMap = {
     color: "#003580",
     logo: "../../../assets/images/booking.jpeg",
   },
-  AGDA: {
+  AGOD: {
     label: "Agoda",
     color: "#19AC5B",
 
     logo: "../../../assets/images/agoda.png",
   },
-  TRVL: {
+  TRAV: {
     label: "Traveloka",
     color: "#00ADEF",
     logo: "../../../assets/images/traveloka.jpg",
@@ -28,7 +28,7 @@ const platformMap = {
   WALK: {
     label: "Walk-In",
     color: "#f12424",
-    logo: "",
+    logo: "../../../assets/images/walkIn.png",
   },
 };
 
@@ -50,6 +50,21 @@ const ViewBooking = ({
 }) => {
   const [note, setNote] = useState<string>(booking.note || "");
 
+  const statusDeterminer = (status, usedFor) => {
+    const checkInIsToday =
+      new Date().toISOString().split("T")[0] ===
+      new Date(booking.checkIn).toISOString().split("T")[0];
+
+    if (status === "booked" && !checkInIsToday) {
+      return usedFor === "classname" ? "booked" : "จองแล้ว";
+    }
+    if (status === "booked" && checkInIsToday) {
+      return usedFor === "classname" ? "notCheckedIn" : "ยังไม่ Check-In";
+    }
+    if (status === "checkedIn") {
+      return usedFor === "classname" ? "checkedIn" : "Check-In แล้ว";
+    }
+  };
   return (
     <div className="viewBooking__wrapper">
       <div className="viewBooking__top">
@@ -64,8 +79,8 @@ const ViewBooking = ({
         </h1>
         <h1 className="viewBooking__roomAndIsCheckedIn">
           {booking.roomId} <br />
-          <span className={booking.isCheckedIn ? "checkedIn" : "notCheckedIn"}>
-            {booking.isCheckedIn ? "Check In แล้ว" : "ยังไม่ Check In"}
+          <span className={statusDeterminer(booking.status, "classname")}>
+            {statusDeterminer(booking.status, "text")}
           </span>
         </h1>
       </div>

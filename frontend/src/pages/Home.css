@@ -70,3 +70,9 @@
 .home__refreshIcon:active {
   transform: rotate(120deg);
 }
+
+.home__profileImg:hover {
+  transition-duration: 0.2s;
+
+  transform: scale(1.1);
+}

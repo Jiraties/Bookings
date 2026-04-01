@@ -14,14 +14,14 @@ export const recentActivities = async (
     if (limit > 20) throw new Error("Max limit is 20");
 
     const fetchedActivities = await Activity.find({
-      staffUsername: req.user?.userId,
+      staffUsername: req.user?.username,
     })
       .sort({ timestamp: -1 })
       .skip(skip)
       .limit(limit);
 
     const totalActivitycount = await Activity.countDocuments({
-      staffUsername: req.user?.userId,
+      staffUsername: req.user?.username,
     });
 
     res

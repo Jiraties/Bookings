@@ -39,7 +39,7 @@ const ConfirmationModal = ({
     <div className="confirmationModal">
       <div className="confirmationModal__text">
         <h1 className="confirmationModal__headerText">
-          คุณแน่ใจหรือไม่ว่าจะลบการจองของ <br />
+          คุณแน่ใจหรือไม่ว่าจะ<strong>ลบการจองของ</strong> <br />
           {booking?.name}?
         </h1>
         <p>การลบจะไม่สามารถนำคืนได้</p>

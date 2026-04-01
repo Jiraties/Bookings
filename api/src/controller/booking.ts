@@ -1,6 +1,9 @@
 import e, { NextFunction, Request, Response } from "express";
 import Booking from "../models/booking";
 import { logActivity } from "../services/activityServices";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const newBooking = async (
   req: Request,
@@ -37,7 +40,7 @@ export const newBooking = async (
       staffUsername: booking.staffUsername,
       bookingId: booking.bookingId,
       checkInByStaffUsername: null,
-      isCheckedIn: false,
+      status: "booked",
     });
 
     await savedBooking.save();
@@ -46,7 +49,7 @@ export const newBooking = async (
       .status(201)
       .json({ message: "Booking created successfully", booking: savedBooking });
 
-    logActivity(req.user?.userId, "NEW_BOOKING", {
+    logActivity(req.user?.username, "NEW_BOOKING", {
       snapshot: {
         name: booking.name,
         checkIn: booking.checkIn,
@@ -119,7 +122,7 @@ export const removeBooking = async (req: Request, res: Response) => {
       message: `Successfully deleted bookingId: ${bookingId}`,
     });
 
-    logActivity(req.user?.userId, "REMOVE_BOOKING", {
+    logActivity(req.user?.username, "REMOVE_BOOKING", {
       snapshot: {
         name: deletedBooking.name,
         checkIn: deletedBooking.checkIn,
@@ -138,12 +141,27 @@ export const removeBooking = async (req: Request, res: Response) => {
 
 type checkInData = {
   deposit: number;
+  passportData: {
+    passportNo: string;
+    passportName: string;
+    nationality: string;
+  };
   checkInByStaffUsername: string;
 };
 
 export const checkIn = async (req: Request, res: Response) => {
   const bookingId = req.body.bookingId;
   const checkInData: checkInData = req.body.checkInData;
+
+  if (!bookingId) throw new Error("");
+
+  if (
+    !checkInData.passportData.nationality ||
+    !checkInData.passportData.passportNo ||
+    !checkInData.passportData.passportName
+  ) {
+    throw new Error("กรุณากรอกข้อมูลให้ครบทุกช่อง");
+  }
 
   const response = Booking.findOneAndUpdate(
     { bookingId },
