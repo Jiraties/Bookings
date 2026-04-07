@@ -229,7 +229,9 @@ const Home = ({ status }: { status: "arrivals" | "departures" }) => {
         </div>
 
         <div className="home__headerProfile">
-          <p>{user?.name}</p>
+          <p>
+            {user?.name} <strong>{"  " + user?.admin && "Admin"}</strong>
+          </p>
           <Link to={"/settings"}>
             <img
               className="home__profileImg"

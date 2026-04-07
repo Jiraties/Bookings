@@ -24,6 +24,11 @@
   gap: 1rem;
 }
 
+.home__headerProfile strong {
+  margin-left: 0.2rem;
+  color: var(--primary-color);
+}
+
 .home__stats {
   display: flex;
   gap: 1.5rem;

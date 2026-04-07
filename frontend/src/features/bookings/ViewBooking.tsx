@@ -20,7 +20,7 @@ const platformMap = {
     color: "#00ADEF",
     logo: "../../../assets/images/traveloka.jpg",
   },
-  HSTL: {
+  HOST: {
     label: "Hostelworld",
     color: "#F15A24",
     logo: "../../../assets/images/hostelworld.png",
@@ -50,7 +50,7 @@ const ViewBooking = ({
 }) => {
   const [note, setNote] = useState<string>(booking.note || "");
 
-  const statusDeterminer = (status, usedFor) => {
+  const statusDeterminer = (status: string, usedFor: string) => {
     const checkInIsToday =
       new Date().toISOString().split("T")[0] ===
       new Date(booking.checkIn).toISOString().split("T")[0];
@@ -77,12 +77,22 @@ const ViewBooking = ({
             </>
           ))}
         </h1>
-        <h1 className="viewBooking__roomAndIsCheckedIn">
-          {booking.roomId} <br />
-          <span className={statusDeterminer(booking.status, "classname")}>
-            {statusDeterminer(booking.status, "text")}
-          </span>
-        </h1>
+        <div className="viewBooking__roomAndIsCheckedIn">
+          <h1>
+            {booking.roomId} <br />
+          </h1>
+          <div
+            className={
+              "viewBooking__statusBadge " +
+              statusDeterminer(booking.status, "classname")
+            }
+          >
+            <div className="viewBooking__statusDot"></div>
+            <p className="viewBooking__statusText">
+              {statusDeterminer(booking.status, "text")}
+            </p>
+          </div>
+        </div>
       </div>
       <div className="viewBooking__main">
         <div className="viewBooking__mainLeft">
@@ -114,8 +124,7 @@ const ViewBooking = ({
                 calendar: "gregory",
                 dateStyle: "short",
               }).format(booking.checkOut)}
-              {"  ( "}
-              {booking.nights} คืน )
+              <div className="viewBooking__nights">{booking.nights} คืน</div>
             </p>
           </div>
           <div className="viewBooking__item">
@@ -124,40 +133,18 @@ const ViewBooking = ({
           </div>
 
           <div className="viewBooking__item">
-            <span className="viewBooking__label">Notes: </span>
-            <p className="viewBooking__infoText">{booking.note || "-"}</p>
-
-            {/* <textarea
-              className="boxInput viewBooking__noteTextArea"
-              onChange={(e) => setNote(e.target.value)}
-              value={note}
-            ></textarea> */}
-          </div>
-          <div className="viewBooking__item">
             <span className="viewBooking__label">Staff ที่บันทึกรายการ: </span>
             <p className="viewBooking__infoText">{booking.staffUsername}</p>
           </div>
         </div>
         <div className="viewBooking__mainRight">
           {/* <p>ค่าใช้จ่าย</p> */}
-          <div className="viewBooking__priceLIst">
-            <div
-              className={
-                booking.paymentMethod === "Unpaid"
-                  ? "viewBooking__price viewBooking__unpaidPrice"
-                  : "viewBooking__price"
-              }
-            >
+          <div className="viewBooking__priceList">
+            <div className="viewBooking__price">
               <div
                 style={{ display: "flex", gap: "1rem", alignItems: "center" }}
               >
-                <i
-                  className={
-                    booking.paymentMethod === "Unpaid"
-                      ? "bx bx-bed-alt  viewBooking__bedIconUnpaid"
-                      : "bx bx-bed-alt viewBooking__bedIcon"
-                  }
-                />
+                <i className={"bx bx-bed-alt viewBooking__bedIcon"} />
                 <div>
                   <p className="viewBooking__infoText">
                     {booking.price.toLocaleString("th-TH")} บาท
@@ -192,62 +179,36 @@ const ViewBooking = ({
               </div>
             </div>
 
-            {/* <div
-              className={
-                booking.paymentMethod === "Unpaid"
-                  ? "viewBooking__price viewBooking__unpaidPrice"
-                  : "viewBooking__price"
-              }
-            >
-              <div
-                style={{ display: "flex", gap: "1rem", alignItems: "center" }}
-              >
-                <i
-                  className={"viewBooking__bedIcon bx " + "bx-ship"}
-                  style={{ backgroundColor: "#1e3a5f" }}
-                />
-                <div>
-                  <p className="viewBooking__infoText">
-                    {Number("240").toLocaleString("th-TH")} บาท
-                  </p>
-                  <p>ค่า Slowboat</p>
-                </div>
-              </div>
-              <div style={{ display: "flex", gap: "0.5rem" }}>
+            {booking.note && (
+              <div className="viewBooking__note">
                 <p
-                  className={
-                    booking.paymentMethod === "Unpaid"
-                      ? "viewBooking__unpaid"
-                      : ""
-                  }
+                  style={{
+                    color: "#ffbf00",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: ".5rem",
+                    marginBottom: ".5rem",
+                  }}
                 >
-                  {"Cash"}
-                  {}
+                  <i className="bx bx-note" style={{ fontSize: "1.3rem" }} />
+                  Note:{" "}
                 </p>
-                {booking.paymentMethod === "Unpaid" ? (
-                  <i
-                    className="bx bx-error viewBooking__unpaid"
-                    style={{ fontSize: "1.4rem" }}
-                  />
-                ) : (
-                  <i
-                    className={"bx " + paymentMethodIconMap["Cash"]}
-                    style={{ fontSize: "1.4rem" }}
-                  />
-                )}
+                <p>{booking.note}</p>
               </div>
-            </div> */}
+            )}
           </div>
         </div>
       </div>
       <div className="viewBooking__actions">
-        <ActionButton text="แก้ไขการจอง" onClick={() => {}} icon="bx-edit" />
-        <ActionButton
-          text="ลบการจอง"
-          onClick={() => removeBookingHandler(booking)}
-          icon="bx-trash"
-        />
-        {!booking.isCheckedIn && (
+        <div className="viewBooking__actionsLeft">
+          <ActionButton text="แก้ไขการจอง" onClick={() => {}} icon="bx-edit" />
+          <ActionButton
+            text="ลบการจอง"
+            onClick={() => removeBookingHandler(booking)}
+            icon="bx-trash"
+          />
+        </div>
+        {booking.status === "booked" && (
           <ActionButton
             text="Check In"
             onClick={() => setCheckInIsOpen(true)}

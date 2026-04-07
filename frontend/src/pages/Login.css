@@ -53,7 +53,7 @@
   padding: 1rem;
   border-radius: 0.5rem;
   box-sizing: border-box;
-  box-shadow: rgba(149, 157, 165, 0.25) 0px 8px 24px;
+  var(--main-shadow);
   width: 100%;
   background-color: #fd4169;
   color: #ffffff;

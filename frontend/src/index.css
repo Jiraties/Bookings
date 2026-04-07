@@ -7,12 +7,16 @@
   --primary-color: #51d1dc;
   --background: #fff;
   --light-background: #f6f6f6;
+  --main-shadow: rgba(149, 157, 165, 0.25) 0px 8px 24px;
+  --light-shadow: rgba(149, 157, 165, 0.129) 0px 8px 24px;
   /* --background: #f3f3f3;
   --light-background: #e5e5e5; */
   --text: #000;
   --lightGreen: rgb(178, 249, 226);
   --green: rgb(30, 203, 131);
   --red: #fd4169;
+  --light-red: #fd416910;
+
   color: var(--text);
   background-color: var(--background);
 
@@ -54,7 +58,7 @@
   /* background-color: var(--background);
   color: var(--text); */
   border: 0;
-  box-shadow: rgba(149, 157, 165, 0.25) 0px 8px 24px;
+  box-shadow: var(--main-shadow);
   width: 100%;
   box-sizing: border-box;
   appearance: none;
@@ -65,7 +69,7 @@
   padding: 1rem;
   border-radius: 0.5rem;
   border: 0;
-  box-shadow: rgba(149, 157, 165, 0.25) 0px 8px 24px;
+  box-shadow: var(--main-shadow);
   width: 100%;
   color: #fff;
   background-color: #51d1dc;

@@ -61,8 +61,10 @@ const Spreadsheet = ({
 
   const dateValueFormater = (params: any) =>
     new Intl.DateTimeFormat("th-TH", {
-      dateStyle: "medium",
       calendar: "gregory",
+      day: "numeric",
+      month: "short",
+      year: "2-digit",
     }).format(params.value);
 
   const [colDefs] = useState<ColDef<booking>[]>([
@@ -76,6 +78,7 @@ const Spreadsheet = ({
       valueFormatter: dateValueFormater,
     },
     { field: "nights", headerName: "คืน" },
+    { field: "roomId", headerName: "ห้อง", filter: true },
 
     {
       field: "platformId",
@@ -100,11 +103,10 @@ const Spreadsheet = ({
       filter: true,
       cellClassRules: { red: (param) => param.value === "Unpaid" },
     },
-    { field: "roomId", headerName: "ห้อง", filter: true },
     {
-      field: "isCheckedIn",
+      field: "status",
       headerName: "สถานะ Check-In",
-      cellClassRules: { green: (param) => param.value === true },
+      // cellClassRules: { green: (param) => param.value === true },
       pinned: "right",
     },
     { field: "bookingId", headerName: "Booking ID", sortable: false },

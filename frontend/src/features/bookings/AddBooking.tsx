@@ -188,6 +188,7 @@ const AddBooking = ({
   );
 
   const submitHandler = async () => {
+    if (submitting) return;
     setSubmitting(true);
 
     if (

@@ -24,7 +24,7 @@
   cursor: pointer;
   border-radius: 1rem;
   background-color: var(--background);
-  box-shadow: rgba(149, 157, 165, 0.25) 0px 8px 24px;
+  box-shadow: var(--main-shadow);
   display: flex;
   gap: 0.5rem;
   align-items: center;

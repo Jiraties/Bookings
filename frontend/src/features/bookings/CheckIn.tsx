@@ -5,6 +5,7 @@ import Select from "react-select";
 import countries from "i18n-iso-countries";
 import en from "i18n-iso-countries/langs/en.json";
 import { customStyles } from "./AddBooking";
+import ActionButton from "../../components/ActionButton";
 
 countries.registerLocale(en);
 
@@ -22,16 +23,50 @@ const nationalityOptions = Object.entries(countries.getNames("en")).map(
 
 const CheckIn = ({ booking }: { booking: booking }) => {
   const [deposit, setDeposit] = useState<number>(200);
-  const [nationality, setNationality] = useState<number>(200);
+  const [confirmedPayment, setConfirmedPayment] = useState<boolean>(false);
+  const [nationality, setNationality] = useState<string>("");
+  const [
+    receivesCashAtDifferentAmountToRoomPrice,
+    setReceivesCashAtDifferentAmountToRoomPrice,
+  ] = useState(false);
+  const [receivedCash, setReceivedCash] = useState<string>(
+    String(booking.price),
+  );
+
+  const formatCurrency = (num: number) =>
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+      currency: "THB",
+    }).format(num);
 
   return (
     <div className="checkIn__wrapper">
-      <h1 className="checkIn__title">เช็คอิน {booking.name}</h1>
+      <div>
+        <div className="checkIn__header">
+          <h1 className="checkIn__title">เช็คอิน {booking.name}</h1>
+          {booking.paymentMethod === "Unpaid" && (
+            <div className="checkIn__reminder">
+              <i className="bx bx-message-bubble-exclamation" />
+              <p>
+                ลูกค้าดังกล่าว
+                <strong>
+                  ยังไม่ชำระเงินค่าห้อง
+                  {" " + formatCurrency(booking.price)}
+                </strong>
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
       <div className="checkIn__grid">
-        <div className="checkIn__right">
+        <div className="checkIn__left">
           <div>
             {" "}
-            <p className="checkIn__label">เลข Passport</p>
+            <p className="checkIn__label">
+              เลข Passport <i className="bx bx-check-shield" />
+            </p>
             <input
               type="text"
               className="boxInput"
@@ -39,7 +74,9 @@ const CheckIn = ({ booking }: { booking: booking }) => {
             />
           </div>
           <div>
-            <p className="checkIn__label">ชื่อ-นามสกุล Passport</p>
+            <p className="checkIn__label">
+              ชื่อ-นามสกุล Passport <i className="bx bx-check-shield" />
+            </p>
             <input
               type="text"
               className="boxInput"
@@ -52,7 +89,7 @@ const CheckIn = ({ booking }: { booking: booking }) => {
             <Select options={nationalityOptions} styles={customStyles} />
           </div>
         </div>
-        <div className="checkIn__left">
+        <div className="checkIn__right">
           <div>
             <p className="checkIn__label">มัดจำ (บาท)</p>
             <input
@@ -63,10 +100,95 @@ const CheckIn = ({ booking }: { booking: booking }) => {
               value={deposit}
               // value={formData.roomId}
               placeholder="200"
-              onChange={(e) => setDeposit(Number(e.target.value))}
+              onChange={(e) => {
+                setDeposit(Number(e.target.value));
+                setConfirmedPayment(false);
+              }}
             />
           </div>
+          {receivesCashAtDifferentAmountToRoomPrice && (
+            <div>
+              <p className="checkIn__label">รับเงินสดค่าห้องมา (บาท)</p>
+              <input
+                className="boxInput"
+                type="number"
+                value={receivedCash}
+                placeholder="200"
+                onChange={(e) => {
+                  setReceivedCash(e.target.value);
+                }}
+              />
+            </div>
+          )}
+          <div>
+            <p style={{ marginBottom: ".5rem" }}>ยืนยันการรับเงินสด</p>
+            <div className="checkIn__paymentConfirmation">
+              {/* <h3>ยืนยันการรับเงินสด</h3> */}
+              <div className="checkIn__paymentConfirmationList">
+                <p>ค่ามัดจำ: {formatCurrency(deposit)}</p>
+                {booking.paymentMethod === "Unpaid" && (
+                  <p>
+                    ค่าห้อง: {formatCurrency(booking.price)}
+                    <span className="checkIn__extraAmountReceived">
+                      {receivesCashAtDifferentAmountToRoomPrice &&
+                        ` + เกิน ${formatCurrency(Number(receivedCash) - booking.price)}`}
+                    </span>
+                  </p>
+                )}
+              </div>
+              <div className="checkIn__paymentConfirmationTotal">
+                <div>
+                  <p>รวมเป็นเงินสด:</p>
+                  <p className="checkIn__paymentConfirmationTotalText">
+                    {booking.paymentMethod === "Unpaid"
+                      ? formatCurrency(
+                          deposit +
+                            (receivesCashAtDifferentAmountToRoomPrice
+                              ? Number(receivedCash)
+                              : booking.price),
+                        )
+                      : formatCurrency(deposit)}
+                  </p>
+                </div>
+
+                <label className="checkbox">
+                  ยืนยันการรับเงินสด
+                  <input
+                    type="checkbox"
+                    checked={confirmedPayment}
+                    onChange={(e) => setConfirmedPayment(e.target.checked)}
+                  />
+                  <span className="box"></span>
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+      <div className="checkIn__actions">
+        {booking.paymentMethod === "Unpaid" && (
+          <ActionButton
+            text="รับเงินสดไม่ตรงค่าห้อง"
+            onClick={() => {
+              setReceivesCashAtDifferentAmountToRoomPrice(
+                !receivesCashAtDifferentAmountToRoomPrice,
+              );
+            }}
+            icon={
+              receivesCashAtDifferentAmountToRoomPrice
+                ? "bx-check"
+                : "bx-currency-notes"
+            }
+            highlight={receivesCashAtDifferentAmountToRoomPrice}
+          />
+        )}
+        <ActionButton
+          text="Check In"
+          onClick={() => {}}
+          className="checkIn__confirmAction"
+          icon="bx-check-circle"
+          highlight={true}
+        />
       </div>
     </div>
   );
