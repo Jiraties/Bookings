@@ -19,7 +19,9 @@
 }
 
 .viewBooking__roomAndIsCheckedIn {
-  text-align: right;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
 }
 
 .viewBooking__roomAndIsCheckedIn h1 {
@@ -59,6 +61,16 @@
 
 .checkedIn div {
   background-color: var(--green);
+}
+
+.booked {
+  background-color: rgba(176, 176, 176, 0.1);
+  /* color: var(--green); */
+}
+
+.booked div {
+  background-color: rgb(42, 42, 42);
+  /* color: var(--green); */
 }
 
 .viewBooking__statusText {
@@ -126,6 +138,25 @@
   padding: 1rem;
   box-shadow: var(--main-shadow);
   border-radius: 1rem;
+}
+
+.viewBooking__addTransaction {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 1rem;
+  box-shadow: var(--main-shadow);
+  border-radius: 1rem;
+  transition-duration: 0.2s;
+}
+
+.viewBooking__addTransaction i {
+  color: var(--primary-color);
+}
+
+.viewBooking__addTransaction:hover {
+  transform: scale(1.03);
 }
 
 .viewBooking__unpaid {

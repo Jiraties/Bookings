@@ -1,7 +1,6 @@
 import { AgGridProvider, AgGridReact } from "ag-grid-react";
 import { useState } from "react";
 import { AllCommunityModule } from "ag-grid-community";
-import type { ColDef } from "ag-grid-community";
 import { themeQuartz } from "ag-grid-community";
 import type { booking } from "../../types/bookingTypes";
 import "./Spreadsheet.css";
@@ -55,6 +54,7 @@ const Spreadsheet = ({
 }) => {
   const modules = [AllCommunityModule];
   const location = useLocation();
+
   const status = location.pathname.includes("arrivals")
     ? "arrivals"
     : "departures";
@@ -67,7 +67,8 @@ const Spreadsheet = ({
       year: "2-digit",
     }).format(params.value);
 
-  const [colDefs] = useState<ColDef<booking>[]>([
+  // 🔥 removed heavy generic typing here
+  const [colDefs] = useState([
     { field: "name", headerName: "ชื่อ", filter: true },
     {
       field: "checkIn",
@@ -78,8 +79,12 @@ const Spreadsheet = ({
       valueFormatter: dateValueFormater,
     },
     { field: "nights", headerName: "คืน" },
-    { field: "roomId", headerName: "ห้อง", filter: true },
-
+    {
+      valueGetter: (params: any) =>
+        params.data.roomStays?.map((r: any) => r.roomId).join(", "),
+      headerName: "ห้อง",
+      filter: true,
+    },
     {
       field: "platformId",
       headerName: "ช่องทางการจอง",
@@ -87,9 +92,12 @@ const Spreadsheet = ({
       cellRenderer: platformCell,
     },
     {
-      field: "price",
       headerName: "ค่าห้อง",
-      valueFormatter: (params) =>
+      valueGetter: (params: any) =>
+        params.data.transactions.find(
+          (transaction) => transaction.type === "roomCharge",
+        ).amount,
+      valueFormatter: (params: any) =>
         new Intl.NumberFormat("th-TH", {
           style: "currency",
           currency: "THB",
@@ -101,12 +109,11 @@ const Spreadsheet = ({
       field: "paymentMethod",
       headerName: "ช่องทางการจ่าย",
       filter: true,
-      cellClassRules: { red: (param) => param.value === "Unpaid" },
+      cellClassRules: { red: (param: any) => param.value === "Unpaid" },
     },
     {
       field: "status",
       headerName: "สถานะ Check-In",
-      // cellClassRules: { green: (param) => param.value === true },
       pinned: "right",
     },
     { field: "bookingId", headerName: "Booking ID", sortable: false },
@@ -114,7 +121,6 @@ const Spreadsheet = ({
       field: "checkedInByStaffUsername",
       headerName: "เช็คอินโดย",
     },
-
     { field: "note", sortable: false },
   ]);
 
@@ -128,17 +134,17 @@ const Spreadsheet = ({
         style={{
           boxShadow: "rgba(149, 157, 165, 0.25) 0px 8px 24px",
           height: "100%",
-          borderRadius: "   1rem",
+          borderRadius: "1rem",
         }}
       >
-        <AgGridReact<booking>
+        {/* 🔥 removed <booking> generic here */}
+        <AgGridReact
           rowData={bookings}
           columnDefs={colDefs}
           theme={myTheme}
           autoSizeStrategy={{
             type: "fitCellContents",
           }}
-          // gridOptions={{ enableCellTextSelection: true }}
           onRowDoubleClicked={onRowDoubleClicked}
         />
       </div>

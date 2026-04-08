@@ -47,6 +47,11 @@ const Home = ({ status }: { status: "arrivals" | "departures" }) => {
   const bookingCheckInIsToday = (booking: booking) =>
     booking.checkIn.toDateString() === new Date().toDateString();
 
+  const roomChargeTransaction = (booking: booking) =>
+    booking.transactions.find(
+      (transaction) => transaction.type === "roomCharge",
+    )!;
+
   const stats = {
     arrivalsToday: bookings.filter(
       (booking) => booking.checkIn.toDateString() === new Date().toDateString(),
@@ -56,12 +61,12 @@ const Home = ({ status }: { status: "arrivals" | "departures" }) => {
         booking.checkOut.toDateString() === new Date().toDateString(),
     ).length,
     unpaidCheckins: bookings.filter(
-      (booking) => booking.paymentMethod === "Unpaid",
+      (booking) => roomChargeTransaction(booking).paymentMethod === "Unpaid",
     ).length,
     cashToday: bookings.reduce((sum, booking) => {
-      if (booking.paymentMethod !== "Cash") return sum;
+      if (roomChargeTransaction(booking).paymentMethod !== "Cash") return sum;
       if (!bookingCheckInIsToday(booking)) return sum;
-      return sum + booking.price;
+      return sum + roomChargeTransaction(booking).amount!;
     }, 0),
     guestsInHouse: 10,
     deposit: 10,

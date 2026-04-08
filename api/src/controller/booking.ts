@@ -31,12 +31,29 @@ export const newBooking = async (
       checkOut: booking.checkOut,
       nights: calculateNights(booking.checkIn, booking.checkOut),
       platformId: booking.platformId,
-      roomId: booking.roomId,
-      price: booking.price,
-      paymentMethod: booking.paymentMethod,
+      roomStays: [
+        {
+          roomId: booking.roomId,
+          from: booking.checkIn,
+          to: booking.checkedOut,
+        },
+      ],
       note: booking.note || "",
-      deposit: null,
-      depositRepaid: null,
+
+      // ------- OLD TRANSACTION STRUCTURE --------
+      // price: booking.price,
+      // paymentMethod: booking.paymentMethod,
+      // deposit: null,
+      // depositRepaid: null,
+
+      transactions: [
+        {
+          type: "roomCharge",
+          amount: booking.price,
+          paymentMethod: booking.paymentMethod,
+        },
+      ],
+
       staffUsername: booking.staffUsername,
       bookingId: booking.bookingId,
       checkInByStaffUsername: null,
@@ -128,9 +145,9 @@ export const removeBooking = async (req: Request, res: Response) => {
         checkIn: deletedBooking.checkIn,
         checkOut: deletedBooking.checkOut,
         platformId: deletedBooking.platformId,
-        roomId: deletedBooking.roomId,
-        price: deletedBooking.price,
-        paymentMethod: deletedBooking.paymentMethod,
+        roomId: deletedBooking.roomStays[0].roomId,
+        price: deletedBooking.transactions[0].amount,
+        paymentMethod: deletedBooking.transactions[0].paymentMethod,
         bookingId: deletedBooking.bookingId,
       },
     });

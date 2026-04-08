@@ -12,7 +12,7 @@ countries.registerLocale(en);
 const getFlagEmoji = (code: string) =>
   code
     .toUpperCase()
-    .replace(/./g, (char) => String.fromCodePoint(127397 + char.charCodeAt()));
+    .replace(/./g, (char) => String.fromCodePoint(127397 + char.charCodeAt(0)));
 
 const nationalityOptions = Object.entries(countries.getNames("en")).map(
   ([code, name]) => ({
@@ -86,7 +86,8 @@ const CheckIn = ({ booking }: { booking: booking }) => {
           </div>
           <div>
             <p className="checkIn__label">ชาติ</p>
-            <Select options={nationalityOptions} styles={customStyles} />
+            <Select options={nationalityOptions} styles={customStyles} />{" "}
+            //@ts-ignore
           </div>
         </div>
         <div className="checkIn__right">
@@ -138,7 +139,7 @@ const CheckIn = ({ booking }: { booking: booking }) => {
               </div>
               <div className="checkIn__paymentConfirmationTotal">
                 <div>
-                  <p>รวมเป็นเงินสด:</p>
+                  <p>รับเงินสดทั้งหมด:</p>
                   <p className="checkIn__paymentConfirmationTotalText">
                     {booking.paymentMethod === "Unpaid"
                       ? formatCurrency(

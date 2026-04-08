@@ -2,28 +2,46 @@ type PlatformId = "BOOK" | "HOST" | "TRAV" | "AGOD" | "WALK";
 type PaymentMethod = "OTA" | "Cash" | "Card" | "Transfer" | "Unpaid";
 type Status = "booked" | "checkedIn" | "checkedOut";
 
+interface EncryptedField {
+  ciphertext: string;
+  iv: string;
+  authTag: string;
+}
+
+interface roomStay {
+  roomId: string;
+  from: Date;
+  to: Date;
+}
+
 interface Passport {
+  passportHash?: string;
   nationality?: string;
-  passportNo?: string;
-  passportName?: string;
+  passportNo?: EncryptedField;
+  passportName?: EncryptedField;
+}
+
+export interface transcation {
+  type: "roomCharge" | "deposit" | "adjustment" | "depositRefund";
+  paymentMethod: PaymentMethod;
+  reasonOfAdjustment?: "rounding";
+  amount: number;
 }
 
 export interface booking extends Document {
   name: string;
+  roomStays: roomStay[];
   checkIn: Date;
   checkOut: Date;
   nights: number;
   platformId: PlatformId;
-  roomId: string;
-  price: number;
-  paymentMethod: PaymentMethod;
-  note?: string;
-  deposit?: number | null;
-  depositRepaid?: boolean | null;
-  staffUsername: string;
   status: Status;
-  checkInByStaffUsername?: string | null;
   bookingId: string;
 
-  passport?: Passport;
+  transactions: transcation[];
+
+  staffUsername: string;
+  checkInByStaffUsername?: string | null;
+
+  note?: string;
 }

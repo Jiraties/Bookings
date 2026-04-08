@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ActionButton from "../../components/ActionButton";
-import type { booking } from "../../types/bookingTypes";
+import type { booking, transcation } from "../../types/bookingTypes";
 import "./ViewBooking.css";
 
 const platformMap = {
@@ -65,6 +65,15 @@ const ViewBooking = ({
       return usedFor === "classname" ? "checkedIn" : "Check-In แล้ว";
     }
   };
+
+  const roomsName = booking.roomStays
+    .map((roomStay) => roomStay.roomId)
+    .join(", ");
+
+  const roomChargeTransaction = booking.transactions.find(
+    (transaction) => transaction.type === "roomCharge",
+  )!;
+
   return (
     <div className="viewBooking__wrapper">
       <div className="viewBooking__top">
@@ -79,7 +88,7 @@ const ViewBooking = ({
         </h1>
         <div className="viewBooking__roomAndIsCheckedIn">
           <h1>
-            {booking.roomId} <br />
+            {roomsName} <br />
           </h1>
           <div
             className={
@@ -113,18 +122,22 @@ const ViewBooking = ({
             </div>
           </div>
           <div className="viewBooking__item">
-            <span className="viewBooking__label">เข้าพัก: </span>
+            <span className="viewBooking__label">Check-In: </span>
             <p className="viewBooking__infoText">
               {new Intl.DateTimeFormat("th-TH", {
                 calendar: "gregory",
-                dateStyle: "short",
+                dateStyle: "medium",
               }).format(booking.checkIn)}{" "}
-              -{" "}
+              <div className="viewBooking__nights">{booking.nights} คืน</div>
+            </p>
+          </div>
+          <div className="viewBooking__item">
+            <span className="viewBooking__label">Check-Out </span>
+            <p className="viewBooking__infoText">
               {new Intl.DateTimeFormat("th-TH", {
                 calendar: "gregory",
-                dateStyle: "short",
+                dateStyle: "medium",
               }).format(booking.checkOut)}
-              <div className="viewBooking__nights">{booking.nights} คืน</div>
             </p>
           </div>
           <div className="viewBooking__item">
@@ -147,7 +160,7 @@ const ViewBooking = ({
                 <i className={"bx bx-bed-alt viewBooking__bedIcon"} />
                 <div>
                   <p className="viewBooking__infoText">
-                    {booking.price.toLocaleString("th-TH")} บาท
+                    {roomChargeTransaction.amount.toLocaleString("th-TH")} บาท
                   </p>
                   <p>ค่าห้อง</p>
                 </div>
@@ -155,15 +168,15 @@ const ViewBooking = ({
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 <p
                   className={
-                    booking.paymentMethod === "Unpaid"
+                    roomChargeTransaction.paymentMethod === "Unpaid"
                       ? "viewBooking__unpaid"
                       : ""
                   }
                 >
-                  {booking.paymentMethod}
+                  {roomChargeTransaction.paymentMethod}
                   {}
                 </p>
-                {booking.paymentMethod === "Unpaid" ? (
+                {roomChargeTransaction.paymentMethod === "Unpaid" ? (
                   <i
                     className="bx bx-error viewBooking__unpaid"
                     style={{ fontSize: "1.4rem" }}
@@ -171,12 +184,18 @@ const ViewBooking = ({
                 ) : (
                   <i
                     className={
-                      "bx " + paymentMethodIconMap[booking.paymentMethod]
+                      "bx " +
+                      paymentMethodIconMap[roomChargeTransaction.paymentMethod]
                     }
                     style={{ fontSize: "1.4rem" }}
                   />
                 )}
               </div>
+            </div>
+
+            <div className="viewBooking__addTransaction">
+              <i className="bx bx-dollar" />
+              <p>เพิ่มรายการใช้จ่าย</p>
             </div>
 
             {booking.note && (
@@ -206,6 +225,11 @@ const ViewBooking = ({
             text="ลบการจอง"
             onClick={() => removeBookingHandler(booking)}
             icon="bx-trash"
+          />
+          <ActionButton
+            text="ยกเลิกการจอง"
+            onClick={() => {}}
+            icon="bx-calendar-x"
           />
         </div>
         {booking.status === "booked" && (

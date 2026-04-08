@@ -10,6 +10,12 @@ interface EncryptedField {
   authTag: string;
 }
 
+interface roomStay {
+  roomId: string;
+  from: Date;
+  to: Date;
+}
+
 interface Passport {
   passportHash?: string;
   nationality?: string;
@@ -17,46 +23,99 @@ interface Passport {
   passportName?: EncryptedField;
 }
 
+interface transcation {
+  type: "roomCharge" | "deposit" | "adjustment" | "depositRefund";
+  paymentMethod: PaymentMethod;
+  reasonOfAdjustment?: "rounding";
+  amount: number;
+}
+
+// export interface booking extends Document {
+//   name: string;
+//   checkIn: Date;
+//   checkOut: Date;
+//   nights: number;
+//   platformId: PlatformId;
+//   roomId: string;
+//   price: number;
+//   paymentMethod: PaymentMethod;
+//   note?: string;
+//   deposit?: number | null;
+//   depositRepaid?: boolean | null;
+//   staffUsername: string;
+//   status: Status;
+//   checkInByStaffUsername?: string | null;
+//   bookingId: string;
+
+//   passport?: Passport;
+// }
+
 export interface booking extends Document {
   name: string;
+  roomStays: roomStay[];
   checkIn: Date;
   checkOut: Date;
   nights: number;
   platformId: PlatformId;
-  roomId: string;
-  price: number;
-  paymentMethod: PaymentMethod;
-  note?: string;
-  deposit?: number | null;
-  depositRepaid?: boolean | null;
-  staffUsername: string;
   status: Status;
-  checkInByStaffUsername?: string | null;
   bookingId: string;
 
+  transactions: transcation[];
+
+  staffUsername: string;
+  checkInByStaffUsername?: string | null;
+
   passport?: Passport;
+  note?: string;
 }
+
+const roomStaySchema = new mongoose.Schema({
+  roomId: { type: String },
+  from: { type: Date },
+  to: { type: Date },
+});
+
+const transactionSchema = new mongoose.Schema({
+  type: {
+    type: String,
+    enum: ["roomCharge", "deposit", "adjustment", "depositRefund"],
+  },
+  paymentMethod: {
+    type: String,
+    enum: ["OTA", "Cash", "Card", "Transfer", "Unpaid"],
+  },
+  reasonOfAdjustment: {
+    type: String,
+    enum: ["rounding"],
+    required: false,
+  },
+  amount: { type: Number },
+});
 
 const bookingSchema = new mongoose.Schema({
   name: { type: String },
+
+  roomStays: [roomStaySchema],
+
   checkIn: { type: Date },
   checkOut: { type: Date },
   nights: { type: Number },
   platformId: { type: String },
-  roomId: { type: String },
-  price: { type: Number },
-  paymentMethod: { type: String },
+
   note: { type: String },
-  deposit: { type: Number, default: null },
-  depositRepaid: { type: Boolean, default: null },
   staffUsername: { type: String },
   bookingId: { type: String, unique: true },
+
   status: {
     type: String,
     enum: ["booked", "checkedIn", "checkedOut"],
     default: "booked",
   },
+
   checkInByStaffUsername: { type: String, default: null },
+
+  transactions: [transactionSchema],
+
   passport: {
     passportHash: String,
     nationality: { type: String },
