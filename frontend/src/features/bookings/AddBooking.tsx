@@ -6,35 +6,41 @@ import { useAuth } from "../../context/AuthContext";
 import toast from "react-hot-toast";
 import axios from "axios";
 import type { booking } from "../../types/bookingTypes";
+import type { StylesConfig } from "react-select";
 
-export const customStyles = {
-  control: (provided: React.CSSProperties) => ({
+type OptionType = {
+  value: string;
+  label: string;
+};
+
+export const customStyles: StylesConfig<OptionType, false> = {
+  control: (provided) => ({
     ...provided,
     fontSize: "inherit",
     fontFamily: '"IBM Plex Sans Thai", sans-serif',
     padding: "0.6rem",
     borderRadius: "0.5rem",
-    border: 0,
+    border: "none",
     boxShadow: "rgba(149, 157, 165, 0.25) 0px 8px 24px",
     width: "100%",
     color: "var(--text)",
     backgroundColor: "#fff",
   }),
 
-  input: (provided: React.CSSProperties) => ({
+  input: (provided) => ({
     ...provided,
     padding: 0,
     margin: 0,
     boxShadow: "none",
   }),
 
-  singleValue: (provided: React.CSSProperties) => ({
+  singleValue: (provided) => ({
     ...provided,
     fontSize: "inherit",
     color: "var(--text)",
   }),
 
-  menu: (provided: React.CSSProperties) => ({
+  menu: (provided) => ({
     ...provided,
     fontSize: "inherit",
     borderRadius: "0.5rem",
@@ -42,7 +48,7 @@ export const customStyles = {
     fontFamily: '"IBM Plex Sans Thai", sans-serif',
   }),
 
-  option: (provided: React.CSSProperties, state: any) => ({
+  option: (provided, state: any) => ({
     ...provided,
     fontSize: "1rem",
     fontFamily: '"IBM Plex Sans Thai", sans-serif',
@@ -51,7 +57,7 @@ export const customStyles = {
     cursor: "pointer",
   }),
 
-  dropdownIndicator: (provided: React.CSSProperties) => ({
+  dropdownIndicator: (provided) => ({
     ...provided,
     color: "#fff",
   }),

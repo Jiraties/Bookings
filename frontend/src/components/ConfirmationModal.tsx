@@ -17,10 +17,6 @@ const ConfirmationModal = ({
       return;
     }
 
-    console.log(
-      "http://localhost:3000/bookings/removeBooking/" + booking?.bookingId,
-    );
-
     try {
       await axios.delete(
         "http://localhost:3000/bookings/removeBooking/" + booking?.bookingId,

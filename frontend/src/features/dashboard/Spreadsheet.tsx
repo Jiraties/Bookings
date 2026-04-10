@@ -67,7 +67,6 @@ const Spreadsheet = ({
       year: "2-digit",
     }).format(params.value);
 
-  // 🔥 removed heavy generic typing here
   const [colDefs] = useState([
     { field: "name", headerName: "ชื่อ", filter: true },
     {
@@ -106,7 +105,10 @@ const Spreadsheet = ({
         }).format(params.value),
     },
     {
-      field: "paymentMethod",
+      valueGetter: (params: any) =>
+        params.data.transactions.find(
+          (transaction) => transaction.type === "roomCharge",
+        ).paymentMethod,
       headerName: "ช่องทางการจ่าย",
       filter: true,
       cellClassRules: { red: (param: any) => param.value === "Unpaid" },
@@ -137,7 +139,6 @@ const Spreadsheet = ({
           borderRadius: "1rem",
         }}
       >
-        {/* 🔥 removed <booking> generic here */}
         <AgGridReact
           rowData={bookings}
           columnDefs={colDefs}

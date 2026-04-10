@@ -39,6 +39,13 @@ const paymentMethodIconMap = {
   Transfer: "bx-arrow-right-left",
 };
 
+const transactionMap = {
+  roomCharge: { icon: "bx-bed-alt", name: "ค่าห้อง", color: "#51d1dc" },
+  deposit: { icon: "bx-wallet", name: "รับมัดจำ", color: "#facc15" },
+  adjustment: { icon: "bx-edit-alt", name: "ปรับราคา", color: "#a78bfa" },
+  depositRefund: { icon: "bx-undo", name: "คืนมัดจำ", color: "#f87171" },
+};
+
 const ViewBooking = ({
   booking,
   removeBookingHandler,
@@ -79,11 +86,9 @@ const ViewBooking = ({
       <div className="viewBooking__top">
         <h1 className="viewBooking__name">
           {booking.name.split(" ").map((word) => (
-            <>
-              {" "}
-              <span key={word}>{word} </span>
-              <br />
-            </>
+            <span key={word}>
+              {word} <br key={word} />
+            </span>
           ))}
         </h1>
         <div className="viewBooking__roomAndIsCheckedIn">
@@ -128,7 +133,7 @@ const ViewBooking = ({
                 calendar: "gregory",
                 dateStyle: "medium",
               }).format(booking.checkIn)}{" "}
-              <div className="viewBooking__nights">{booking.nights} คืน</div>
+              <span className="viewBooking__nights">{booking.nights} คืน</span>
             </p>
           </div>
           <div className="viewBooking__item">
@@ -153,45 +158,51 @@ const ViewBooking = ({
         <div className="viewBooking__mainRight">
           {/* <p>ค่าใช้จ่าย</p> */}
           <div className="viewBooking__priceList">
-            <div className="viewBooking__price">
-              <div
-                style={{ display: "flex", gap: "1rem", alignItems: "center" }}
-              >
-                <i className={"bx bx-bed-alt viewBooking__bedIcon"} />
-                <div>
-                  <p className="viewBooking__infoText">
-                    {roomChargeTransaction.amount.toLocaleString("th-TH")} บาท
+            {booking.transactions.map((transaction) => (
+              <div className="viewBooking__price" key={transaction.amount}>
+                <div
+                  style={{ display: "flex", gap: "1rem", alignItems: "center" }}
+                >
+                  <i
+                    className={`bx ${transactionMap[transaction.type].icon} viewBooking__bedIcon`}
+                    style={{
+                      backgroundColor: transactionMap[transaction.type].color,
+                    }}
+                  />
+                  <div>
+                    <p className="viewBooking__infoText">
+                      {transaction.amount.toLocaleString("th-TH")} บาท
+                    </p>
+                    <p>{transactionMap[transaction.type].name}</p>
+                  </div>
+                </div>
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <p
+                    className={
+                      transaction.paymentMethod === "Unpaid"
+                        ? "viewBooking__unpaid"
+                        : ""
+                    }
+                  >
+                    {transaction.paymentMethod}
+                    {}
                   </p>
-                  <p>ค่าห้อง</p>
+                  {transaction.paymentMethod === "Unpaid" ? (
+                    <i
+                      className="bx bx-error viewBooking__unpaid"
+                      style={{ fontSize: "1.4rem" }}
+                    />
+                  ) : (
+                    <i
+                      className={
+                        "bx " + paymentMethodIconMap[transaction.paymentMethod]
+                      }
+                      style={{ fontSize: "1.4rem" }}
+                    />
+                  )}
                 </div>
               </div>
-              <div style={{ display: "flex", gap: "0.5rem" }}>
-                <p
-                  className={
-                    roomChargeTransaction.paymentMethod === "Unpaid"
-                      ? "viewBooking__unpaid"
-                      : ""
-                  }
-                >
-                  {roomChargeTransaction.paymentMethod}
-                  {}
-                </p>
-                {roomChargeTransaction.paymentMethod === "Unpaid" ? (
-                  <i
-                    className="bx bx-error viewBooking__unpaid"
-                    style={{ fontSize: "1.4rem" }}
-                  />
-                ) : (
-                  <i
-                    className={
-                      "bx " +
-                      paymentMethodIconMap[roomChargeTransaction.paymentMethod]
-                    }
-                    style={{ fontSize: "1.4rem" }}
-                  />
-                )}
-              </div>
-            </div>
+            ))}
 
             <div className="viewBooking__addTransaction">
               <i className="bx bx-dollar" />

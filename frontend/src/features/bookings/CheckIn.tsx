@@ -6,6 +6,9 @@ import countries from "i18n-iso-countries";
 import en from "i18n-iso-countries/langs/en.json";
 import { customStyles } from "./AddBooking";
 import ActionButton from "../../components/ActionButton";
+import { roomChargeTransaction } from "../../helpers/bookingHelpers";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 countries.registerLocale(en);
 
@@ -21,16 +24,24 @@ const nationalityOptions = Object.entries(countries.getNames("en")).map(
   }),
 );
 
-const CheckIn = ({ booking }: { booking: booking }) => {
+const CheckIn = ({
+  booking,
+  handleCheckInSuccess,
+}: {
+  booking: booking;
+  handleCheckInSuccess: (booking: booking) => void;
+}) => {
   const [deposit, setDeposit] = useState<number>(200);
   const [confirmedPayment, setConfirmedPayment] = useState<boolean>(false);
   const [nationality, setNationality] = useState<string>("");
+  const [passportName, setPassportName] = useState<string>("");
+  const [passportNo, setPassportNo] = useState<string>("");
   const [
     receivesCashAtDifferentAmountToRoomPrice,
     setReceivesCashAtDifferentAmountToRoomPrice,
   ] = useState(false);
   const [receivedCash, setReceivedCash] = useState<string>(
-    String(booking.price),
+    String(roomChargeTransaction(booking).amount),
   );
 
   const formatCurrency = (num: number) =>
@@ -41,19 +52,56 @@ const CheckIn = ({ booking }: { booking: booking }) => {
       currency: "THB",
     }).format(num);
 
+  const checkInHandler = async () => {
+    if (!nationality || !passportName || !passportNo || !deposit) {
+      toast.error("กรุณากรอกข้อมูลให้ครบทุกช่อง");
+      return;
+    }
+
+    if (!confirmedPayment) {
+      toast.error("กรุณายืนยันการรับเงินสดจากลูกค้า");
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        "http://localhost:3000/bookings/checkIn/" + booking?.bookingId,
+        {
+          deposit,
+          // roundingAdjustment:
+          //   Number(receivedCash) - roomChargeTransaction(booking).amount,
+          passportData: {
+            passportNo: nationality,
+            passportName: "asdasd",
+            nationality: "asdasd",
+          },
+        },
+        { withCredentials: true },
+      );
+
+      if (response.status === 200) {
+        toast.success(`Check-In สำหรับ ${response.data} สำเร็จ`);
+        handleCheckInSuccess(response.data);
+        console.log(response);
+      }
+    } catch (err: any) {
+      toast.error(err);
+    }
+  };
+
   return (
     <div className="checkIn__wrapper">
       <div>
         <div className="checkIn__header">
           <h1 className="checkIn__title">เช็คอิน {booking.name}</h1>
-          {booking.paymentMethod === "Unpaid" && (
+          {roomChargeTransaction(booking).paymentMethod === "Unpaid" && (
             <div className="checkIn__reminder">
               <i className="bx bx-message-bubble-exclamation" />
               <p>
                 ลูกค้าดังกล่าว
                 <strong>
                   ยังไม่ชำระเงินค่าห้อง
-                  {" " + formatCurrency(booking.price)}
+                  {" " + formatCurrency(roomChargeTransaction(booking).amount)}
                 </strong>
               </p>
             </div>
@@ -69,6 +117,8 @@ const CheckIn = ({ booking }: { booking: booking }) => {
             </p>
             <input
               type="text"
+              value={passportNo}
+              onChange={(e) => setPassportNo(e.target.value)}
               className="boxInput"
               placeholder="เช่น A12345678"
             />
@@ -79,6 +129,8 @@ const CheckIn = ({ booking }: { booking: booking }) => {
             </p>
             <input
               type="text"
+              value={passportName}
+              onChange={(e) => setPassportName(e.target.value)}
               className="boxInput"
               style={{ textTransform: "uppercase" }}
               placeholder="เช่น Robert Brown"
@@ -86,8 +138,14 @@ const CheckIn = ({ booking }: { booking: booking }) => {
           </div>
           <div>
             <p className="checkIn__label">ชาติ</p>
-            <Select options={nationalityOptions} styles={customStyles} />{" "}
-            //@ts-ignore
+            <Select
+              options={nationalityOptions}
+              styles={customStyles}
+              value={nationalityOptions.find(
+                (option) => option.value === nationality,
+              )}
+              onChange={(option) => setNationality(option?.value || "")}
+            />{" "}
           </div>
         </div>
         <div className="checkIn__right">
@@ -127,12 +185,13 @@ const CheckIn = ({ booking }: { booking: booking }) => {
               {/* <h3>ยืนยันการรับเงินสด</h3> */}
               <div className="checkIn__paymentConfirmationList">
                 <p>ค่ามัดจำ: {formatCurrency(deposit)}</p>
-                {booking.paymentMethod === "Unpaid" && (
+                {roomChargeTransaction(booking).paymentMethod === "Unpaid" && (
                   <p>
-                    ค่าห้อง: {formatCurrency(booking.price)}
+                    ค่าห้อง:{" "}
+                    {formatCurrency(roomChargeTransaction(booking).amount)}
                     <span className="checkIn__extraAmountReceived">
                       {receivesCashAtDifferentAmountToRoomPrice &&
-                        ` + เกิน ${formatCurrency(Number(receivedCash) - booking.price)}`}
+                        ` + เกิน ${formatCurrency(Number(receivedCash) - roomChargeTransaction(booking).amount)}`}
                     </span>
                   </p>
                 )}
@@ -141,12 +200,12 @@ const CheckIn = ({ booking }: { booking: booking }) => {
                 <div>
                   <p>รับเงินสดทั้งหมด:</p>
                   <p className="checkIn__paymentConfirmationTotalText">
-                    {booking.paymentMethod === "Unpaid"
+                    {roomChargeTransaction(booking).paymentMethod === "Unpaid"
                       ? formatCurrency(
                           deposit +
                             (receivesCashAtDifferentAmountToRoomPrice
                               ? Number(receivedCash)
-                              : booking.price),
+                              : roomChargeTransaction(booking).amount),
                         )
                       : formatCurrency(deposit)}
                   </p>
@@ -167,7 +226,7 @@ const CheckIn = ({ booking }: { booking: booking }) => {
         </div>
       </div>
       <div className="checkIn__actions">
-        {booking.paymentMethod === "Unpaid" && (
+        {roomChargeTransaction(booking).paymentMethod === "Unpaid" && (
           <ActionButton
             text="รับเงินสดไม่ตรงค่าห้อง"
             onClick={() => {
@@ -185,7 +244,7 @@ const CheckIn = ({ booking }: { booking: booking }) => {
         )}
         <ActionButton
           text="Check In"
-          onClick={() => {}}
+          onClick={checkInHandler}
           className="checkIn__confirmAction"
           icon="bx-check-circle"
           highlight={true}

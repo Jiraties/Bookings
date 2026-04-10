@@ -116,6 +116,7 @@ const Home = ({ status }: { status: "arrivals" | "departures" }) => {
           },
         ];
 
+  // ----------- IMPORTANT FUNCTION: every booking sent from backend needs to be formated here ------------
   const formatBookingsDates = (bookings: booking[]) =>
     bookings.map((booking: booking) => {
       booking.checkIn = new Date(booking.checkIn);
@@ -158,6 +159,12 @@ const Home = ({ status }: { status: "arrivals" | "departures" }) => {
 
   const removeBookingHandler = (booking: booking) => {
     setConfirmationModalIsOpen({ isOpen: true, booking });
+  };
+
+  const handleCheckInSuccess = (booking: booking) => {
+    fetchBookings();
+    setViewBookingBooking(formatBookingsDates([booking])[0]);
+    setCheckInIsOpen(false);
   };
 
   useEffect(() => {
@@ -205,8 +212,12 @@ const Home = ({ status }: { status: "arrivals" | "departures" }) => {
           open={checkInIsOpen}
           className="home__modalCenter"
           onClose={() => setCheckInIsOpen(false)}
+          fetchBookings={fetchBookings}
         >
-          <CheckIn booking={viewBookingBooking} />
+          <CheckIn
+            booking={viewBookingBooking}
+            handleCheckInSuccess={handleCheckInSuccess}
+          />
         </Modal>
       )}
       <header className="home__header">
@@ -249,7 +260,11 @@ const Home = ({ status }: { status: "arrivals" | "departures" }) => {
       <div className="home__statsAndActions">
         <div className="home__stats">
           {statCards.map((stat) => (
-            <StatCard label={stat.label} value={stat.value ? stat.value : 0} />
+            <StatCard
+              key={stat.label}
+              label={stat.label}
+              value={stat.value ? stat.value : 0}
+            />
           ))}
         </div>
         <div className="home__actions">

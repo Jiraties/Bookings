@@ -1,7 +1,9 @@
-import e, { NextFunction, Request, Response } from "express";
 import Booking from "../models/booking";
-import { logActivity } from "../services/activityServices";
 import dotenv from "dotenv";
+import crypto from "crypto";
+
+import { NextFunction, Request, Response } from "express";
+import { logActivity } from "../services/activityServices";
 
 dotenv.config();
 
@@ -163,29 +165,89 @@ type checkInData = {
     passportName: string;
     nationality: string;
   };
-  checkInByStaffUsername: string;
 };
 
 export const checkIn = async (req: Request, res: Response) => {
-  const bookingId = req.body.bookingId;
-  const checkInData: checkInData = req.body.checkInData;
+  console.log("here");
 
-  if (!bookingId) throw new Error("");
+  try {
+    const { bookingId } = req.params;
+    const checkInData: checkInData = req.body;
 
-  if (
-    !checkInData.passportData.nationality ||
-    !checkInData.passportData.passportNo ||
-    !checkInData.passportData.passportName
-  ) {
-    throw new Error("กรุณากรอกข้อมูลให้ครบทุกช่อง");
+    console.log(bookingId, checkInData);
+
+    if (!bookingId) throw new Error("");
+
+    if (
+      !checkInData.passportData.nationality ||
+      !checkInData.passportData.passportNo ||
+      !checkInData.passportData.passportName ||
+      !checkInData.deposit
+    ) {
+      throw new Error("กรุณากรอกข้อมูลให้ครบทุกช่อง");
+    }
+
+    const hashPassport = (passportNo: string) => {
+      return crypto.createHash("sha256").update(passportNo).digest("hex");
+    };
+
+    const encrypt = (text: string) => {
+      if (!process.env.CRYPTO_SECRET) throw new Error("CRYPTO_SECRET Missing");
+
+      const key = Buffer.from(process.env.CRYPTO_SECRET, "hex");
+      const iv = crypto.randomBytes(12);
+
+      const cipher = crypto.createCipheriv("aes-256-gcm", key, iv);
+
+      let cipherText = cipher.update(text, "utf8", "hex");
+      cipherText += cipher.final("hex");
+
+      const authTag = cipher.getAuthTag();
+
+      return {
+        iv: iv.toString("hex"),
+        cipherText,
+        authTag,
+      };
+    };
+
+    const encryptedPassportData = {
+      passportHash: hashPassport(checkInData.passportData.passportNo),
+      nationality: checkInData.passportData.nationality,
+      passportNo: encrypt(checkInData.passportData.passportNo),
+      passportName: encrypt(checkInData.passportData.passportName),
+    };
+
+    const updatedBooking = await Booking.findOneAndUpdate(
+      { bookingId },
+      {
+        $push: {
+          transactions: {
+            type: "deposit",
+            paymentMethod: "Cash",
+            amount: checkInData.deposit,
+          },
+        },
+        $set: {
+          status: "checkedIn",
+          checkInByStaffUsername: req.user?.userId,
+          passport: encryptedPassportData,
+        },
+      },
+      { new: true },
+    );
+
+    const sanitizedBooking = updatedBooking?.toObject();
+
+    if (sanitizedBooking?.passport) {
+      delete sanitizedBooking.passport.passportHash;
+      delete sanitizedBooking.passport.passportNo;
+      delete sanitizedBooking.passport.passportName;
+    }
+
+    console.log(sanitizedBooking);
+    res.status(200).json(sanitizedBooking);
+  } catch (err) {
+    res.status(400).json({ error: err });
   }
-
-  const response = Booking.findOneAndUpdate(
-    { bookingId },
-    {
-      deposit: checkInData.deposit,
-      isCheckedIn: true,
-      checkInByStaffUsername: req.user?.userId,
-    },
-  );
 };

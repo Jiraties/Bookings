@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  checkIn,
   getTodayArrivalBookings,
   getTodayDepartureBookings,
   newBooking,
@@ -12,5 +13,6 @@ bookingsRouter.post("/newBooking", newBooking);
 bookingsRouter.get("/todayArrivals", getTodayArrivalBookings);
 bookingsRouter.get("/todayDepartures", getTodayDepartureBookings);
 bookingsRouter.delete("/removeBooking/:bookingId", removeBooking);
+bookingsRouter.put("/checkIn/:bookingId", checkIn);
 
 export default bookingsRouter;
